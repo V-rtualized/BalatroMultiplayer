@@ -9,15 +9,16 @@
 	"priority": 9007199254740990,
 	"badge_colour": "AC3232",
 	"badge_text_colour": "FFFFFF",
-	"version": "0.1.8.3~POKERMON-SERIES-2-v1",
+	"version": "0.1.8.4~POKERMON-SERIES-2-v2",
 	"dependencies": [
-    "Steamodded (>>1.0.0~ALPHA-1304a)",
+    "Steamodded (>=1.0.0~ALPHA-1424a)",
     "Lovely (>=0.7)",
     "Balatro (>=1.0.1n)",
 		"Pokermon (>=2.7.0)"
   ],
 	"conflicts": [
-		"Cryptid",
-		"Talisman"
+		"SystemClock (<<1.6.3)",
+		"Cryptid (<<0.5.4)",
+		"Talisman (<=2.0.2)"
 	]
 }

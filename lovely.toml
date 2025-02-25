@@ -30,7 +30,7 @@ position = 'at'
 payload = '''local t = G.LOBBY.code and create_UIBox_generic_options({contents ={
     {n=G.UIT.R, config={padding = 0.0, align = "cm", colour = G.C.CLEAR}, nodes={
       {n=G.UIT.R, config={align = 'cm', padding = 0.1, no_fill = true, minh = 0, minw = 0}, nodes={
-        {n=G.UIT.O, config={id = 'tab_contents', object = UIBox{definition = G.UIDEF.run_setup_option('New Run'), config = {offset = {x=0,y=0}}}}}
+        {n=G.UIT.O, config={id = 'tab_contents', object = UIBox{definition = ((Galdur and Galdur.config.use) and G.UIDEF.run_setup_option_new_model or G.UIDEF.run_setup_option)('New Run'), config = {offset = {x=0,y=0}}}}}
       }},
     }},
   }}) or create_UIBox_generic_options({no_back = from_game_over, no_esc = from_game_over, contents ={'''
@@ -252,18 +252,28 @@ times = 1
 
 [[patches]]
 [patches.regex]
-target = 'functions/state_events.lua'
-pattern = '''G.FUNCS.evaluate_round(?<pre>[\s\S]+?)to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips)'''
-position = 'at'
-payload = '''G.FUNCS.evaluate_round$pre to_big(G.GAME.chips) >= to_big(G.GAME.blind.chips) or G.LOBBY.code'''
-match_indent = true
+target = 'game.lua'
+pattern = 'self\.jokers = CardArea'
+position = 'before'
+payload = '''if G.LOBBY.code then 
+      self.shared = CardArea(
+        0, CAI.consumeable_H + 0.3,
+        CAI.consumeable_W / 2,
+        CAI.consumeable_H, 
+        {card_limit = 0, type = 'joker', highlight_limit = 1})
+    end
+'''
 times = 1
 
 [[patches]]
-[patches.regex]
-target = 'functions/state_events.lua'
-pattern = '''G.FUNCS.evaluate_round(?<pre>[\s\S]+?)G.GAME.chips - G.GAME.blind.chips >= 0'''
-position = 'at'
-payload = '''G.FUNCS.evaluate_round$pre (G.GAME.chips - G.GAME.blind.chips >= 0) or G.LOBBY.code'''
+[patches.pattern]
+target = 'functions/common_events.lua'
+pattern = 'G.consumeables.T.y = 0'
+position = 'after'
+payload = '''if G.shared then
+  G.shared.T.x = G.consumeables.T.x + (G.consumeables.T.w / 2)
+  G.shared.T.y = G.consumeables.T.y + G.consumeables.T.h + 0.4
+end
+'''
 match_indent = true
 times = 1
