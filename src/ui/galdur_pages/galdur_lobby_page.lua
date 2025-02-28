@@ -215,12 +215,6 @@ function MP.UI.clean_lobby_areas()
 end
 Galdur.clean_up_functions.mp_clean_lobby_areas = MP.UI.clean_lobby_areas
 
-for i, _ in ipairs(Galdur.pages_to_add) do
-	Galdur.pages_to_add[i].condition = function()
-		return MPAPI.get_lobby() == nil or MPAPI.is_host()
-	end
-end
-
 Galdur.add_new_page({
 	name = "page_title_lobby",
 	definition = MP.UI.lobby_page,

@@ -5,7 +5,7 @@ MP.gamemode_preview_texts = {
 
 function MP.UI.BTN.change_gamemode_page(args)
 	Galdur.clean_up_functions.clean_gamemode_areas()
-	MP.UI.populate_player_card_areas(args.cycle_config.current_option)
+	MP.UI.populate_gamemode_card_areas(args.cycle_config.current_option)
 end
 G.FUNCS.mp_change_gamemode_page = MP.UI.BTN.change_gamemode_page
 

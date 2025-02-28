@@ -118,19 +118,9 @@ MPAPI.SERVER_CONFIG.url = "balatro.virtualized.dev"
 MPAPI.SERVER_CONFIG.port = 6858
 MPAPI.initialize()
 
-local event
-event = Event({
-	trigger = "after",
-	blockable = false,
-	blocking = false,
-	delay = 3,
-	pause_force = true,
-	no_delete = true,
-	timer = "REAL",
-	func = function()
-		MP.send_debug_message(MP.GAME_PLAYERS.BY_INDEX)
-
-		event.start_timer = false
-	end,
-})
---MP.add_event(event)
+create_lobby_version_ref = MPAPI.UI.create_lobby_version
+function MPAPI.UI.create_lobby_version(additional_versions)
+	additional_versions = additional_versions or {}
+	table.insert(additional_versions, "Multiplayer " .. MP.version:match("^(%d+%.%d+%.%d+)(%S*)$"))
+	return create_lobby_version_ref(additional_versions)
+end

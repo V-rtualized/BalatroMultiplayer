@@ -36,12 +36,6 @@ function MP.UI.BTN.galdur_last_run_btn(e)
 end
 G.FUNCS.mp_galdur_last_run_btn = MP.UI.BTN.galdur_last_run_btn
 
-for i, _ in ipairs(Galdur.pages_to_add) do
-	Galdur.pages_to_add[i].condition = function()
-		return MPAPI.get_lobby() == nil or MPAPI.is_host()
-	end
-end
-
 function MP.get_gamemode_sprite(_gamemode, _scale)
 	_gamemode = _gamemode or 1
 	_scale = _scale or 1
@@ -411,4 +405,11 @@ function MP.UI.display_gamemode_preview()
 			},
 		},
 	}
+end
+
+for i, _ in ipairs(Galdur.pages_to_add) do
+	Galdur.pages_to_add[i].condition = Galdur.pages_to_add[i].condition
+		or function()
+			return MPAPI.get_lobby() == nil or MPAPI.is_host()
+		end
 end
