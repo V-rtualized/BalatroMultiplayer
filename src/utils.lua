@@ -105,19 +105,6 @@ function MP.get_joker(key)
 	return nil
 end
 
-function MP.get_non_phantom_jokers()
-	if not G.jokers or not G.jokers.cards then
-		return {}
-	end
-	local jokers = {}
-	for _, v in ipairs(G.jokers.cards) do
-		if v.ability.set == "Joker" and (not v.edition or v.edition.type ~= "mp_phantom") then
-			table.insert(jokers, v)
-		end
-	end
-	return jokers
-end
-
 local ease_ante_ref = ease_ante
 function ease_ante(mod)
 	if not MPAPI.is_in_lobby() then
