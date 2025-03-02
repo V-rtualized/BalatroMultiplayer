@@ -68,14 +68,14 @@ return {
 				name = "Your Nemesis",
 				text = {
 					"Face your nemesis,", -- Changed as of 1.0
-					"highest score wins",
+					"most score wins",
 				},
 			},
 			-- New as of 1.0
 			bl_mp_precision = {
 				name = "The Marksman",
 				text = {
-					"Face your nemesis, closest",
+					"Face another player, closest",
 					"to the target score wins",
 				},
 			},
@@ -83,7 +83,7 @@ return {
 				name = "The Horde",
 				text = {
 					"Face all other players,",
-					"lowest score loses",
+					"least score loses",
 				},
 			},
 			bl_mp_truce = {
@@ -122,7 +122,7 @@ return {
 			gamemode_mp_precision = {
 				name = "Precision",
 				text = {
-					"Battle Royale, except each boss",
+					"Battle Royale, except each boos",
 					"blind has a target score,",
 					"farthest from the target score loses.",
 					-- Lives text

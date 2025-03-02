@@ -9,16 +9,16 @@
 	"priority": 9007199254740990,
 	"badge_colour": "8867a5",
 	"badge_text_colour": "FFFFFF",
-	"version": "1.0.0~ALPHA-0007b",
+	"version": "1.0.0~ALPHA-0007d",
 	"dependencies": [
-    "Steamodded (>>1.0.0~ALPHA-1304a)",
+    "Steamodded (>=1.0.0~BETA-0301a)",
     "Lovely (>=0.7)",
-    "Balatro (>=1.*)",
+    "Balatro (>=1.0.1o)",
 		"MultiplayerAPI",
 		"galdur (>=1.2)"
   ],
 	"conflicts": [
-		"Cryptid (<=0.5.3c)",
+		"Cryptid (<<0.5.4)",
 		"Talisman (<<2.1.0~dev)",
 		"VirtualizedMultiplayer"
 	]

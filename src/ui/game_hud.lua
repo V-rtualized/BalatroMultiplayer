@@ -491,7 +491,7 @@ function MP.end_round()
 			then
 				G.GAME.round_resets.blind_states.Big = "Defeated"
 			else
-				G.GAME.current_round.voucher = get_next_voucher_key()
+				G.GAME.current_round.voucher = SMODS.get_next_vouchers()
 				G.GAME.round_resets.blind_states.Boss = "Defeated"
 				for k, v in ipairs(G.playing_cards) do
 					v.ability.played_this_ante = nil
