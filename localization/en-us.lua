@@ -132,7 +132,7 @@ return {
 			draft_desc = "Players play the Evolving Deck from the Balatro Draft mod, where they each gain a Draft Tag after every PvP Blind.",
 			draft_req = "Requires the Balatro Draft mod",
 			monty_special_name = "The Dr. Monty Special",
-			monty_special_desc = "A special gamemode designed by @dr_monty_the_snek on the discord server. I guess you'll have to find out what it is! (Gamemode changes with each minor update)",
+			monty_special_desc = "A special gamemode designed by @dr_monty_the_snek on the discord server. I guess you'll have to find out what it is!",
 			precision_name = "Precision",
 			precision_desc = "The same as Attrition, except the person closest to the target score wins PvP blinds (instead of the person with the highest score).",
 			royale_name = "Battle Royale",

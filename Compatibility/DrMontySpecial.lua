@@ -1,42 +1,77 @@
-G.MULTIPLAYER.DECK.ban_card("j_caino")
-G.MULTIPLAYER.DECK.ban_card("j_perkeo")
-G.MULTIPLAYER.DECK.ban_card("j_triboulet")
-G.MULTIPLAYER.DECK.ban_card("j_yorick")
-G.MULTIPLAYER.DECK.ban_card("j_blueprint")
-G.MULTIPLAYER.DECK.ban_card("j_ancient")
-G.MULTIPLAYER.DECK.ban_card("j_baron")
-G.MULTIPLAYER.DECK.ban_card("j_baseball")
-G.MULTIPLAYER.DECK.ban_card("j_campfire")
-G.MULTIPLAYER.DECK.ban_card("j_dna")
-G.MULTIPLAYER.DECK.ban_card("j_family")
-G.MULTIPLAYER.DECK.ban_card("j_trio")
-G.MULTIPLAYER.DECK.ban_card("j_vagabond")
-G.MULTIPLAYER.DECK.ban_card("j_wee")
-G.MULTIPLAYER.DECK.ban_card("j_acrobat")
-G.MULTIPLAYER.DECK.ban_card("j_card_sharp")
-G.MULTIPLAYER.DECK.ban_card("j_cartomancer")
-G.MULTIPLAYER.DECK.ban_card("j_certificate")
-G.MULTIPLAYER.DECK.ban_card("j_constellation")
-G.MULTIPLAYER.DECK.ban_card("j_dusk")
-G.MULTIPLAYER.DECK.ban_card("j_fibonacci")
-G.MULTIPLAYER.DECK.ban_card("j_hologram")
-G.MULTIPLAYER.DECK.ban_card("j_loyalty_card")
-G.MULTIPLAYER.DECK.ban_card("j_lucky_cat")
-G.MULTIPLAYER.DECK.ban_card("j_midas_mask")
-G.MULTIPLAYER.DECK.ban_card("j_bloodstone")
-G.MULTIPLAYER.DECK.ban_card("j_arrowhead")
-G.MULTIPLAYER.DECK.ban_card("j_onyx_agate")
-G.MULTIPLAYER.DECK.ban_card("j_ramen")
-G.MULTIPLAYER.DECK.ban_card("j_selzer")
-G.MULTIPLAYER.DECK.ban_card("j_trading")
-G.MULTIPLAYER.DECK.ban_card("j_abstract")
-G.MULTIPLAYER.DECK.ban_card("j_blue_joker")
-G.MULTIPLAYER.DECK.ban_card("j_cavendish")
-G.MULTIPLAYER.DECK.ban_card("j_photograph")
-G.MULTIPLAYER.DECK.ban_card("j_hanging_chad")
-G.MULTIPLAYER.DECK.ban_card("j_half")
-G.MULTIPLAYER.DECK.ban_card("j_mail")
-G.MULTIPLAYER.DECK.ban_card("j_odd_todd")
-G.MULTIPLAYER.DECK.ban_card("c_justice")
-G.MULTIPLAYER.DECK.ban_card("c_deja_vu")
-G.MULTIPLAYER.DECK.ban_card("c_trance")
+G.MULTIPLAYER.DECK.BANNED_CARDS_DRMONTY = { -- banned cards for the dr monty special (weekly tournament 3)
+    { id = "j_caino" }, -- legendaries
+    { id = "j_perkeo" },
+    { id = "j_triboulet" },
+    { id = "j_yorick" },
+    { id = "j_chicot" }, -- alredy banned
+
+    { id = "j_blueprint" }, -- rares
+    { id = "j_brainstorm" },
+    { id = "j_ancient" },
+    { id = "j_baron" },
+    { id = "j_baseball" },
+    { id = "j_dna" },
+    { id = "j_family" };
+    { id = "j_trio" },
+    { id = "j_vagabond" },
+
+    { id = "j_acrobat" }, -- uncommons
+    { id = "j_card_sharp" },
+    { id = "j_cartomancer" },
+    { id = "j_certificate" },
+    { id = "j_dusk" },
+    { id = "j_fibonacci" },
+    { id = "j_hologram" },
+    { id = "j_loyalty_card" },
+    { id = "j_lucky_cat" },
+    { id = "j_midas_mask" },
+    { id = "j_bloodstone" },
+    { id = "j_arrowhead" },
+    { id = "j_onyx_agate" },
+    { id = "j_selzer" },
+    { id = "j_trading" },
+    { id = "j_mime"},
+    { id = "j_steel_joker" },
+    { id = "j_mr_bones" }, -- alredy banned
+    { id = "j_luchador" }, -- alredy banned
+    { id = "j_matador" }, -- alredy banned
+
+
+    { id = "j_abstract" }, -- commons
+    { id = "j_blue_joker" },
+    { id = "j_cavendish" },
+    { id = "j_photograph" },
+    { id = "j_hanging_chad" },
+    { id = "j_mail" },
+    { id = "j_reserved_parking" },
+    { id = "j_mp_defensive_joker" },
+    { id = "j_mp_hanging_bad" },
+
+    { id = "c_trance" }, -- spectrals
+    { id = "c_deja_vu" },
+
+    { id = "c_justice" }, -- tarots
+
+    { id = "v_magic_trick" }, -- vouchers
+    { id = "v_illusion" },
+    { id = "v_hieroglyph" }, -- alredy banned
+	{ id = "v_petroglyph" }, -- alredy banned
+	{ id = "v_directors_cut" }, -- alredy banned
+	{ id = "v_retcon" }, -- alredy banned
+}
+
+G.MULTIPLAYER.DECK.BANNED_TAGS_DRMONTY = { -- banned tags for the dr monty special (weekly tournament 3)
+    { id = "tag_uncommon" } ,
+    { id = "tag_meteor" },
+    { id = "tag_garbage" },
+    { id = "tag_top_up" },
+    { id = "tag_handy" },
+    { id = "tag_boss" }, -- alredy banned
+}
+
+SMODS.Enhancement:take_ownership("glass", { -- change mult and chance of breaking of breaking glass
+	config = {
+		Xmult = 1,
+		extra = 1000000,
+	},
+}, true)

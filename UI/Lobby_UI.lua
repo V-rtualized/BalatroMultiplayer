@@ -444,7 +444,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 													Disableable_Toggle({
 														id = "gold_on_life_loss_toggle",
 														enabled_ref_table = G.LOBBY,
-														enabled_ref_value = "is_host",
+														enabled_ref_value = "disabled",
 														label = G.localization.misc.dictionary["opts_cb_money"]
 															or "Give comeback gold on life loss",
 														ref_table = G.LOBBY.config,
@@ -463,7 +463,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 													Disableable_Toggle({
 														id = "no_gold_on_round_loss_toggle",
 														enabled_ref_table = G.LOBBY,
-														enabled_ref_value = "is_host",
+														enabled_ref_value = "disabled",
 														label = G.localization.misc.dictionary["opts_no_gold_on_loss"]
 															or "Don't get blind gold on round loss",
 														ref_table = G.LOBBY.config,
@@ -482,7 +482,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 													Disableable_Toggle({
 														id = "death_on_round_loss_toggle",
 														enabled_ref_table = G.LOBBY,
-														enabled_ref_value = "is_host",
+														enabled_ref_value = "disabled",
 														label = G.localization.misc.dictionary["opts_death_on_loss"]
 															or "Lose a life on non-PvP round loss",
 														ref_table = G.LOBBY.config,
@@ -501,7 +501,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 													Disableable_Toggle({
 														id = "different_seeds_toggle",
 														enabled_ref_table = G.LOBBY,
-														enabled_ref_value = "is_host",
+														enabled_ref_value = "disabled",
 														label = G.localization.misc.dictionary["opts_diff_seeds"]
 															or "Players have different seeds",
 														ref_table = G.LOBBY.config,
@@ -520,7 +520,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 													Disableable_Toggle({
 														id = "different_decks_toggle",
 														enabled_ref_table = G.LOBBY,
-														enabled_ref_value = "is_host",
+														enabled_ref_value = "disabled",
 														label = G.localization.misc.dictionary["opts_player_diff_deck"]
 															or "Players have different decks",
 														ref_table = G.LOBBY.config,
@@ -539,7 +539,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 													Disableable_Toggle({
 														id = "multiplayer_jokers_toggle",
 														enabled_ref_table = G.LOBBY,
-														enabled_ref_value = "is_host",
+														enabled_ref_value = "disabled",
 														label = G.localization.misc.dictionary["opts_multiplayer_jokers"]
 															or "Enable Multiplayer Jokers",
 														ref_table = G.LOBBY.config,
@@ -614,7 +614,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 																				scale = 0.45,
 																				col = true,
 																				enabled_ref_table = G.LOBBY,
-																				enabled_ref_value = "is_host",
+																				enabled_ref_value = "disabled",
 																			}),
 																			{
 																				n = G.UIT.B,
@@ -640,7 +640,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 																				scale = 0.45,
 																				col = true,
 																				enabled_ref_table = G.LOBBY,
-																				enabled_ref_value = "is_host",
+																				enabled_ref_value = "disabled",
 																			}),
 																		},
 																	},
@@ -684,7 +684,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 													Disableable_Option_Cycle({
 														id = "starting_lives_option",
 														enabled_ref_table = G.LOBBY,
-														enabled_ref_value = "is_host",
+														enabled_ref_value = "disabled",
 														label = G.localization.misc.dictionary["opts_lives"] or "Lives",
 														options = {
 															1,
@@ -711,7 +711,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 															and Disableable_Option_Cycle({
 																id = "showdown_starting_antes_option",
 																enabled_ref_table = G.LOBBY,
-																enabled_ref_value = "is_host",
+																enabled_ref_value = "disabled",
 																label = G.localization.misc.dictionary["opts_start_antes"]
 																	or "Starting Antes",
 																options = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
