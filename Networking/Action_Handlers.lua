@@ -15,13 +15,13 @@ function G.MULTIPLAYER.set_username(username)
 	end
 end
 
-local function action_connected()
+local action_connected = action_connected or function()
 	G.LOBBY.connected = true
 	G.MULTIPLAYER.update_connection_status()
 	Client.send(string.format("action:username,username:%s,modHash:%s", G.LOBBY.username, G.MULTIPLAYER.MOD_STRING))
 end
 
-local function action_joinedLobby(code, type)
+local action_joinedLobby = action_joinedLobby or function(code, type)
 	G.LOBBY.code = code
 	G.LOBBY.type = type
 	reset_gamemode_modifiers()
@@ -29,7 +29,7 @@ local function action_joinedLobby(code, type)
 	G.MULTIPLAYER.update_connection_status()
 end
 
-local function action_lobbyInfo(host, hostHash, guest, guestHash, is_host)
+local action_lobbyInfo = action_lobbyInfo or function(host, hostHash, guest, guestHash, is_host)
 	G.LOBBY.players = {}
 	G.LOBBY.is_host = is_host == "true"
 	G.LOBBY.host = { username = host, hash_str = hostHash, hash = hash(hostHash) }
@@ -51,17 +51,17 @@ local function action_lobbyInfo(host, hostHash, guest, guestHash, is_host)
 	end
 end
 
-local function action_error(message)
+local action_error = action_error or function(message)
 	sendWarnMessage(message, "MULTIPLAYER")
 
 	G.MULTIPLAYER.UTILS.overlay_message(message)
 end
 
-local function action_keep_alive()
+local action_keep_alive = action_keep_alive or function()
 	Client.send("action:keepAliveAck")
 end
 
-local function action_disconnected()
+local action_disconnected = action_disconnected or function()
 	G.LOBBY.connected = false
 	if G.LOBBY.code then
 		G.LOBBY.code = nil
@@ -72,7 +72,7 @@ end
 ---@param deck string
 ---@param seed string
 ---@param stake_str string
-local function action_start_game(deck, seed, stake_str)
+local action_start_game = action_start_game or function(deck, seed, stake_str)
 	reset_game_states()
 	local stake = tonumber(stake_str)
 	G.MULTIPLAYER.set_ante(0)
@@ -82,7 +82,7 @@ local function action_start_game(deck, seed, stake_str)
 	G.FUNCS.lobby_start_run(nil, { deck = deck, seed = seed, stake = stake })
 end
 
-local function action_start_blind()
+local action_start_blind = action_start_blind or function()
 	G.MULTIPLAYER_GAME.ready_blind = false
 	if G.MULTIPLAYER_GAME.next_blind_context then
 		G.FUNCS.select_blind(G.MULTIPLAYER_GAME.next_blind_context)
@@ -94,7 +94,7 @@ end
 ---@param score_str string
 ---@param hands_left_str string
 ---@param skips_str string
-local function action_enemy_info(score_str, hands_left_str, skips_str)
+local action_enemy_info = action_enemy_info or function(score_str, hands_left_str, skips_str)
 	local score = tonumber(score_str)
 	local hands_left = tonumber(hands_left_str)
 	local skips = tonumber(skips_str)
@@ -126,7 +126,7 @@ local function action_enemy_info(score_str, hands_left_str, skips_str)
 	end
 end
 
-local function action_stop_game()
+local action_stop_game = action_stop_game or function()
 	if G.STAGE ~= G.STAGES.MAIN_MENU then
 		G.FUNCS.go_to_menu()
 		G.MULTIPLAYER.update_connection_status()
@@ -134,12 +134,12 @@ local function action_stop_game()
 	end
 end
 
-local function action_end_pvp()
+local action_end_pvp = action_end_pvp or function()
 	G.MULTIPLAYER_GAME.end_pvp = true
 end
 
 ---@param lives number
-local function action_player_info(lives)
+local action_player_info = action_player_info or function(lives)
 	if G.MULTIPLAYER_GAME.lives ~= lives then
 		if G.MULTIPLAYER_GAME.lives ~= 0 and G.LOBBY.config.gold_on_life_loss then
 			G.MULTIPLAYER_GAME.comeback_bonus_given = false
@@ -150,17 +150,17 @@ local function action_player_info(lives)
 	G.MULTIPLAYER_GAME.lives = lives
 end
 
-local function action_win_game()
+local action_win_game = action_win_game or function()
 	win_game()
 	G.GAME.won = true
 end
 
-local function action_lose_game()
+local action_lose_game = action_lose_game or function()
 	G.STATE_COMPLETE = false
 	G.STATE = G.STATES.GAME_OVER
 end
 
-local function action_lobby_options(options)
+local action_lobby_options = action_lobby_options or function(options)
 	local different_decks_before = G.LOBBY.config.different_decks
 	for k, v in pairs(options) do
 		if k == "gamemode" then
@@ -191,14 +191,14 @@ local function action_lobby_options(options)
 	G.MULTIPLAYER.update_player_usernames() -- render new DECK button state
 end
 
-local function action_send_phantom(key)
+local action_send_phantom = action_send_phantom or function(key)
 	local new_card = create_card("Joker", G.shared, false, nil, nil, nil, key)
 	new_card:set_edition("e_mp_phantom")
 	new_card:add_to_deck()
 	G.shared:emplace(new_card)
 end
 
-local function action_remove_phantom(key)
+local action_remove_phantom = action_remove_phantom or function(key)
 	local card = G.MULTIPLAYER.UTILS.get_phantom_joker(key)
 	if card then
 		card:remove_from_deck()
@@ -207,15 +207,15 @@ local function action_remove_phantom(key)
 	end
 end
 
-local function action_speedrun()
+local action_speedrun = action_speedrun or function()
 	local card = G.MULTIPLAYER.UTILS.get_joker("j_mp_speedrun")
 	if card then
 		card:juice_up()
-		G.GAME.chips = to_big(G.GAME.chips) * to_big(3 + (speedrun_factor or 0.25)*((effect_level or 1) - 1))
+		G.GAME.chips = to_big(G.GAME.chips) * to_big(3)
 	end
 end
 
-local function enemyLocation(options)
+local action_enemyLocation = action_enemyLocation or function(options)
 	local location = options.location
 	local value = ""
 
@@ -248,12 +248,11 @@ local function enemyLocation(options)
 	G.MULTIPLAYER_GAME.enemy.location = loc_location .. value
 end
 
-local function action_version()
+local action_version = action_version or function()
 	G.MULTIPLAYER.version()
 end
 
-local function action_asteroid()
-        
+local action_asteroid = action_asteroid or function()
 	local hand_type = "High Card"
 	local max_level = 0
 	for k, v in pairs(G.GAME.hands) do
@@ -268,7 +267,7 @@ local function action_asteroid()
 		mult = G.GAME.hands[hand_type].mult,
 		level = G.GAME.hands[hand_type].level,
 	})
-	level_up_hand(nil, hand_type, false, -((asteroid_factor or 1) * (planet_level or 1)))
+	level_up_hand(nil, hand_type, false, -1)
 	update_hand_text(
 		{ sound = "button", volume = 0.7, pitch = 1.1, delay = 0 },
 		{ mult = 0, chips = 0, handname = "", level = "" }
