@@ -1032,6 +1032,16 @@ function Game:start_run(args)
 		scale = 2 * scale,
 	})
 
+	-- Apply modifiers
+	G.GAME.dollars = G.GAME.dollars + MP.LOBBY.config.starting_money_modifier
+	G.GAME.round_resets.hands = G.GAME.round_resets.hands + MP.LOBBY.config.starting_hand_modifier;
+	G.GAME.round_resets.discards = G.GAME.round_resets.discards + MP.LOBBY.config.starting_discard_modifier;
+
+	-- Apply modified values to the current values, this changes nothing mechanically but avoids confusion before the first blind
+	G.GAME.current_round.discards_left = G.GAME.round_resets.discards
+	G.GAME.current_round.hands_left = G.GAME.round_resets.hands
+
+
 	-- Remove unnecessary HUD elements
 	hud_ante.children[2].children[2] = nil
 	hud_ante.children[2].children[3] = nil

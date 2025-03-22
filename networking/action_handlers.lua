@@ -181,7 +181,7 @@ local function action_lobby_options(options)
 		elseif v == "false" then
 			parsed_v = false
 		end
-		if k == "starting_lives" then
+		if k == "starting_lives" or k == "starting_money_modifier" or k == "starting_hand_modifier" or k == "starting_discard_modifier" then
 			parsed_v = tonumber(v)
 		end
 		MP.LOBBY.config[k] = parsed_v
