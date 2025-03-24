@@ -25,9 +25,13 @@ SMODS.Joker({
 	end,
 	calculate = function(self, card, context)
 		if context.cardarea == G.jokers and context.starting_shop then
-			return {
-				dollars = math.floor(MP.GAME.enemy.spent_last_shop / card.ability.extra.nemesis_dollars),
-			}
+			if  MP.LOBBY.enemy_id then
+				return {
+					dollars = math.floor(MP.GAME.enemies[MP.LOBBY.enemy_id].spent_last_shop / card.ability.extra.nemesis_dollars),
+				}
+			else
+				return {}
+			end
 		end
 	end,
 	mp_credits = {

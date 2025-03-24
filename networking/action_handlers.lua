@@ -28,25 +28,54 @@ local function action_joinedLobby(code, type)
 	MP.UI.update_connection_status()
 end
 
-local function action_lobbyInfo(host, hostHash, guest, guestHash, is_host)
-	MP.LOBBY.players = {}
-	MP.LOBBY.is_host = is_host == "true"
-	MP.LOBBY.host = { username = host, hash_str = hostHash, hash = hash(hostHash) }
-	if guest ~= nil then
-		MP.LOBBY.guest = { username = guest, hash_str = guestHash, hash = hash(guestHash) }
+function dump(o)
+	if type(o) == 'table' then
+	   local s = '{ '
+	   for k,v in pairs(o) do
+		  if type(k) ~= 'number' then k = '"'..k..'"' end
+		  s = s .. '['..k..'] = ' .. dump(v) .. ','
+	   end
+	   return s .. '} '
 	else
-		MP.LOBBY.guest = {}
+	   return tostring(o)
 	end
-	-- TODO: This should check for player count instead
-	-- once we enable more than 2 players
-	MP.LOBBY.ready_to_start = MP.LOBBY.is_host and guest ~= nil
+ end
+ 
 
-	if MP.LOBBY.is_host then
-		MP.ACTIONS.lobby_options()
+local function action_lobbyInfo(player_id, players_string, is_started)
+	-- Set players
+	MP.LOBBY.players = {}
+	MP.LOBBY.player_count = 0
+
+	for k, v in string.gmatch(players_string, "([^\\|]+)") do
+		local player = MP.UTILS.string_to_table(k, "-", ">")
+		local id = MP.UTILS.postProcessStringFromNetwork(player.id)
+		MP.LOBBY.players[id] = {
+			id = id,
+			username = MP.UTILS.postProcessStringFromNetwork(player.username),
+			hash = MP.UTILS.postProcessStringFromNetwork(player.hash),
+			is_host = player.isHost == "true",
+		}
+		MP.LOBBY.player_count = MP.LOBBY.player_count + 1
 	end
 
-	if G.STAGE == G.STAGES.MAIN_MENU then
-		MP.ACTIONS.update_player_usernames()
+	-- Basic info
+	MP.LOBBY.player_id = player_id
+	MP.LOBBY.is_started = is_started == "true"
+	MP.LOBBY.is_host = MP.LOBBY.players[MP.LOBBY.player_id].is_host
+
+	MP.LOBBY.ready_to_start = MP.LOBBY.is_host and MP.LOBBY.player_count >= 2 and not MP.LOBBY.is_started
+
+	print(dump(MP.LOBBY))
+
+	if not MP.LOBBY.is_started then
+		if MP.LOBBY.is_host then
+			MP.ACTIONS.lobby_options()
+		end
+
+		if G.STAGE == G.STAGES.MAIN_MENU then
+			MP.ACTIONS.update_player_usernames()
+		end
 	end
 end
 
@@ -85,6 +114,12 @@ local function action_start_blind()
 	MP.GAME.ready_blind = false
 	MP.GAME.timer_started = false
 	MP.GAME.timer = 120
+
+	if not MP.LOBBY.enemy_id then
+		G.FUNCS.reroll_boss()
+		return
+	end
+
 	if MP.GAME.next_blind_context then
 		G.FUNCS.select_blind(MP.GAME.next_blind_context)
 	else
@@ -95,19 +130,23 @@ end
 ---@param score_str string
 ---@param hands_left_str string
 ---@param skips_str string
-local function action_enemy_info(score_str, hands_left_str, skips_str, lives_str)
+local function action_enemy_info(player_id, enemy_id, score_str, hands_left_str, skips_str, lives_str)
 	local score = tonumber(score_str)
 	local hands_left = tonumber(hands_left_str)
 	local skips = tonumber(skips_str)
 	local lives = tonumber(lives_str)
+
+	if MP.GAME.enemies[player_id] == nil then
+		MP.GAME.enemies[player_id] = {}
+	end
 
 	if score == nil or hands_left == nil then
 		sendDebugMessage("Invalid score or hands_left", "MULTIPLAYER")
 		return
 	end
 
-	if to_big(MP.GAME.enemy.highest_score) < to_big(score) then
-		MP.GAME.enemy.highest_score = score
+	if to_big(MP.GAME.enemies[player_id].highest_score) < to_big(score) then
+		MP.GAME.enemies[player_id].highest_score = score
 	end
 
 	G.E_MANAGER:add_event(Event({
@@ -115,7 +154,7 @@ local function action_enemy_info(score_str, hands_left_str, skips_str, lives_str
 		blocking = false,
 		trigger = "ease",
 		delay = 3,
-		ref_table = MP.GAME.enemy,
+		ref_table = MP.GAME.enemies[player_id],
 		ref_value = "score",
 		ease_to = score,
 		func = function(t)
@@ -123,9 +162,29 @@ local function action_enemy_info(score_str, hands_left_str, skips_str, lives_str
 		end,
 	}))
 
-	MP.GAME.enemy.hands = hands_left
-	MP.GAME.enemy.skips = skips
-	MP.GAME.enemy.lives = lives
+	-- Only update enemy if provided
+	if enemy_id ~= nil then
+		if enemy_id ~= "" then
+			-- Set enemy
+			if player_id == MP.LOBBY.player_id then
+				MP.LOBBY.enemy_id = enemy_id
+			end
+			
+			MP.GAME.enemies[player_id].enemy_id = enemy_id
+		else
+			-- Clear enemy
+			if player_id == MP.LOBBY.player_id then
+				MP.LOBBY.enemy_id = nil
+			end
+			
+			MP.GAME.enemies[player_id].enemy_id = nil
+		end
+	end
+
+	-- Update the rest
+	MP.GAME.enemies[player_id].hands = hands_left
+	MP.GAME.enemies[player_id].skips = skips
+	MP.GAME.enemies[player_id].lives = lives
 	if MP.is_pvp_boss() then
 		G.HUD_blind:get_UIE_by_ID("HUD_blind_count"):juice_up()
 		G.HUD_blind:get_UIE_by_ID("dollars_to_be_earned"):juice_up()
@@ -144,6 +203,7 @@ local function action_end_pvp()
 	MP.GAME.end_pvp = true
 	MP.GAME.timer = 120
 	MP.GAME.timer_started = false
+	MP.LOBBY.enemy_id = nil
 end
 
 ---@param lives number
@@ -196,7 +256,10 @@ local function action_lobby_options(options)
 	if different_decks_before ~= MP.LOBBY.config.different_decks then
 		G.FUNCS.exit_overlay_menu() -- throw out guest from any menu.
 	end
-	MP.ACTIONS.update_player_usernames() -- render new DECK button state
+
+	if not MP.LOBBY.is_started then
+		MP.ACTIONS.update_player_usernames() -- render new DECK button state
+	end
 end
 
 local function action_send_phantom(key)
@@ -257,7 +320,7 @@ local function enemyLocation(options)
 		end
 	end
 
-	MP.GAME.enemy.location = loc_location .. value
+	MP.GAME.enemies[options.playerId].location = loc_location .. value
 end
 
 local function action_version()
@@ -301,7 +364,7 @@ local function action_lets_go_gambling_nemesis()
 	if card then
 		card:juice_up()
 	end
-	ease_dollars(card and card.ability and card.ability.extra and card.ability.extra.nemesis_dollars or 5)
+	ease_dollars(MP.LOBBY.enemy_id and card and card.ability and card.ability.extra and card.ability.extra.nemesis_dollars or 5)
 end
 
 local function action_eat_pizza(whole)
@@ -368,8 +431,8 @@ local function action_eat_pizza(whole)
 	end
 end
 
-local function action_spent_last_shop(amount)
-	MP.GAME.enemy.spent_last_shop = tonumber(amount)
+local function action_spent_last_shop(player_id, amount)
+	MP.GAME.enemies[player_id].spent_last_shop = tonumber(amount)
 end
 
 local function action_magnet()
@@ -586,17 +649,6 @@ function MP.ACTIONS.update_player_usernames()
 	end
 end
 
-local function string_to_table(str)
-	local tbl = {}
-	for part in string.gmatch(str, "([^,]+)") do
-		local key, value = string.match(part, "([^:]+):(.+)")
-		if key and value then
-			tbl[key] = value
-		end
-	end
-	return tbl
-end
-
 local game_update_ref = Game.update
 ---@diagnostic disable-next-line: duplicate-set-field
 function Game:update(dt)
@@ -605,7 +657,7 @@ function Game:update(dt)
 	repeat
 		local msg = love.thread.getChannel("networkToUi"):pop()
 		if msg then
-			local parsedAction = string_to_table(msg)
+			local parsedAction = MP.UTILS.string_to_table(msg, ",", ":")
 
 			if not ((parsedAction.action == "keepAlive") or (parsedAction.action == "keepAliveAck")) then
 				local log = string.format("Client got %s message: ", parsedAction.action)
@@ -625,18 +677,23 @@ function Game:update(dt)
 				action_joinedLobby(parsedAction.code, parsedAction.type)
 			elseif parsedAction.action == "lobbyInfo" then
 				action_lobbyInfo(
-					parsedAction.host,
-					parsedAction.hostHash,
-					parsedAction.guest,
-					parsedAction.guestHash,
-					parsedAction.isHost
+					parsedAction.playerId,
+					parsedAction.players,
+					parsedAction.isStarted
 				)
 			elseif parsedAction.action == "startGame" then
 				action_start_game(parsedAction.seed, parsedAction.stake)
 			elseif parsedAction.action == "startBlind" then
 				action_start_blind()
 			elseif parsedAction.action == "enemyInfo" then
-				action_enemy_info(parsedAction.score, parsedAction.handsLeft, parsedAction.skips, parsedAction.lives)
+				action_enemy_info(
+					parsedAction.playerId,
+					parsedAction.enemyId,
+					parsedAction.score,
+					parsedAction.handsLeft,
+					parsedAction.skips,
+					parsedAction.lives
+				)
 			elseif parsedAction.action == "stopGame" then
 				action_stop_game()
 			elseif parsedAction.action == "endPvP" then
@@ -666,7 +723,7 @@ function Game:update(dt)
 			elseif parsedAction.action == "eatPizza" then
 				action_eat_pizza(parsedAction.whole)
 			elseif parsedAction.action == "spentLastShop" then
-				action_spent_last_shop(parsedAction.amount)
+				action_spent_last_shop(parsedAction.playerId, parsedAction.amount)
 			elseif parsedAction.action == "magnet" then
 				action_magnet()
 			elseif parsedAction.action == "magnetResponse" then

@@ -23,9 +23,9 @@ SMODS.Joker({
 		return MP.LOBBY.code and MP.LOBBY.config.multiplayer_jokers
 	end,
 	update = function(self, card, dt)
-		if MP.LOBBY.code then
+		if MP.LOBBY.code and MP.LOBBY.enemy_id then
 			if G.STAGE == G.STAGES.RUN then
-				card.ability.t_chips = math.max((MP.GAME.enemy.lives - MP.GAME.lives) * card.ability.extra.extra, 0)
+				card.ability.t_chips = math.max((MP.GAME.enemies[MP.LOBBY.enemy_id].lives - MP.GAME.lives) * card.ability.extra.extra, 0)
 			end
 		else
 			card.ability.t_chips = 0

@@ -20,7 +20,10 @@ if SMODS.Mods["Distro"] and SMODS.Mods["Distro"].can_load then
 	}))
 
 	function get_multiplayer_details()
-		local enemy_username = MP.LOBBY.is_host and MP.LOBBY.guest.username or MP.LOBBY.host.username
+		local enemy_username = "The House"
+		if MP.LOBBY.enemy_id then
+			enemy_username = MP.LOBBY.players[MP.LOBBY.enemy_id].username
+		end
 
 		return "Multiplayer Versus " .. enemy_username .. " | " .. tostring(MP.GAME.lives) .. " Lives Left"
 	end
@@ -85,17 +88,8 @@ if SMODS.Mods["Distro"] and SMODS.Mods["Distro"].can_load then
 		main_menu_ref(self, change_context)
 
 		if MP.LOBBY.code then
-			local enemy_username = nil
-			if MP.LOBBY.is_host then
-				if MP.LOBBY.guest then
-					enemy_username = MP.LOBBY.guest.username
-				end
-			else
-				enemy_username = MP.LOBBY.host.username
-			end
-
 			DiscordIPC.activity = {
-				details = enemy_username and "In Multiplayer Lobby with " .. enemy_username or "In Multiplayer Lobby",
+				details = MP.LOBBY.player_count > 1 and "In Multiplayer Lobby with " .. MP.LOBBY.player_count - 1 .. "other players" or "In Multiplayer Lobby",
 				timestamps = {
 					start = os.time() * 1000,
 				},

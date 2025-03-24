@@ -24,10 +24,10 @@ SMODS.Joker({
 		return MP.LOBBY.code and MP.LOBBY.config.multiplayer_jokers
 	end,
 	update = function(self, card, dt)
-		if MP.LOBBY.code then
+		if MP.LOBBY.code and MP.LOBBY.enemy_id then
 			if G.STAGE == G.STAGES.RUN then
 				card.ability.extra.x_mult = math.max(
-					math.min(MP.GAME.enemy.hands * card.ability.extra.x_mult_gain, card.ability.extra.max_x_mult),
+					math.min(MP.GAME.enemies[MP.LOBBY.enemy_id].hands * card.ability.extra.x_mult_gain, card.ability.extra.max_x_mult),
 					1
 				)
 			end

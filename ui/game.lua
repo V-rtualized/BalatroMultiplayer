@@ -601,14 +601,14 @@ G.FUNCS.pvp_ready_button = function(e)
 end
 
 local function update_blind_HUD()
-	if MP.LOBBY.code then
+	if MP.LOBBY.code and MP.LOBBY.enemy_id then
 		G.HUD_blind.alignment.offset.y = -10
 		G.E_MANAGER:add_event(Event({
 			trigger = "after",
 			delay = 0.3,
 			blockable = false,
 			func = function()
-				G.HUD_blind:get_UIE_by_ID("HUD_blind_count").config.ref_table = MP.GAME.enemy
+				G.HUD_blind:get_UIE_by_ID("HUD_blind_count").config.ref_table = MP.GAME.enemies[MP.LOBBY.enemy_id]
 				G.HUD_blind:get_UIE_by_ID("HUD_blind_count").config.ref_value = "score_text"
 				G.HUD_blind:get_UIE_by_ID("HUD_blind_count").config.func = "multiplayer_blind_chip_UI_scale"
 				G.HUD_blind:get_UIE_by_ID("HUD_blind").children[2].children[2].children[2].children[1].children[1].config.text =
@@ -616,7 +616,7 @@ local function update_blind_HUD()
 				G.HUD_blind:get_UIE_by_ID("HUD_blind").children[2].children[2].children[2].children[3].children[1].config.text =
 					localize("k_enemy_hands")
 				G.HUD_blind:get_UIE_by_ID("dollars_to_be_earned").config.object.config.string =
-					{ { ref_table = MP.GAME.enemy, ref_value = "hands" } }
+					{ { ref_table = MP.GAME.enemies[MP.LOBBY.enemy_id], ref_value = "hands" } }
 				G.HUD_blind:get_UIE_by_ID("dollars_to_be_earned").config.object:update_text()
 				G.HUD_blind.alignment.offset.y = 0
 				return true
@@ -680,7 +680,7 @@ function Game:update_draw_to_hand(dt)
 							func = function()
 								G.HUD_blind:get_UIE_by_ID("HUD_blind_name").config.object.config.string = {
 									{
-										ref_table = MP.LOBBY.is_host and MP.LOBBY.guest or MP.LOBBY.host,
+										ref_table = MP.LOBBY.players[MP.LOBBY.enemy_id],
 										ref_value = "username",
 									},
 								}
@@ -824,14 +824,14 @@ function Game:update_hand_played(dt)
 		self.shop = nil
 	end
 
-	if not G.STATE_COMPLETE then
+	if MP.LOBBY.enemy_id and not G.STATE_COMPLETE then
 		G.STATE_COMPLETE = true
 		G.E_MANAGER:add_event(Event({
 			trigger = "immediate",
 			func = function()
 				MP.ACTIONS.play_hand(G.GAME.chips, G.GAME.current_round.hands_left)
 				-- Set blind chips to enemy score
-				G.GAME.blind.chips = MP.GAME.enemy.score
+				G.GAME.blind.chips = MP.GAME.enemies[MP.LOBBY.enemy_id].score
 				-- For now, never advance to next round
 				if G.GAME.current_round.hands_left < 1 then
 					attention_text({
@@ -1688,10 +1688,14 @@ function Blind:disable()
 end
 
 G.FUNCS.multiplayer_blind_chip_UI_scale = function(e)
-	local new_score_text = number_format(MP.GAME.enemy.score)
-	if G.GAME.blind and MP.GAME.enemy.score and MP.GAME.enemy.score_text ~= new_score_text then
-		e.config.scale = scale_number(MP.GAME.enemy.score, 0.7, 100000)
-		MP.GAME.enemy.score_text = new_score_text
+	if not MP.LOBBY.enemy_id then
+		return
+	end
+
+	local new_score_text = number_format(MP.GAME.enemies[MP.LOBBY.enemy_id].score)
+	if G.GAME.blind and MP.GAME.enemies[MP.LOBBY.enemy_id].score and MP.GAME.enemies[MP.LOBBY.enemy_id].score_text ~= new_score_text then
+		e.config.scale = scale_number(MP.GAME.enemies[MP.LOBBY.enemy_id].score, 0.7, 100000)
+		MP.GAME.enemies[MP.LOBBY.enemy_id].score_text = new_score_text
 	end
 end
 
@@ -1747,7 +1751,7 @@ local function show_enemy_location()
 						{
 							n = G.UIT.T,
 							config = {
-								ref_table = MP.GAME.enemy,
+								ref_table = MP.LOBBY.enemy_id and MP.GAME.enemies[MP.LOBBY.enemy_id] or {location = "None"},
 								ref_value = "location",
 								scale = 0.35,
 								colour = G.C.WHITE,

@@ -29,9 +29,12 @@ MP.LOBBY = {
 		stake = 1,
 	},
 	username = "Guest",
-	host = {},
-	guest = {},
+	player_id = "",
+	enemy_id = nil,
+	players = {},
+	player_count = 0,
 	is_host = false,
+	is_started = false,
 }
 MP.GAME = {}
 MP.UI = {}
@@ -51,17 +54,7 @@ function MP.reset_game_states()
 		comeback_bonus_given = true,
 		comeback_bonus = 0,
 		end_pvp = false,
-		enemy = {
-			score = 0,
-			score_text = "0",
-			hands = 4,
-			location = "Selecting a Blind",
-			skips = 0,
-			lives = 4,
-			sells = 0,
-			spent_last_shop = 0,
-			highest_score = 0,
-		},
+		enemies = {}, 
 		location = "loc_selecting",
 		next_blind_context = nil,
 		ante_key = tostring(math.random()),
@@ -74,6 +67,21 @@ function MP.reset_game_states()
 		timer = 120,
 		timer_started = false,
 	}
+
+	for k, player in pairs(MP.LOBBY.players) do
+		MP.GAME.enemies[player.id] = {
+			enemy_id = nil,
+			score = 0,
+			score_text = "0",
+			hands = 4,
+			location = "Selecting a Blind",
+			skips = 0,
+			lives = 4,
+			sells = 0,
+			spent_last_shop = 0,
+			highest_score = 0,
+		}
+	end
 end
 
 MP.reset_game_states()

@@ -95,6 +95,20 @@ function G.UIDEF.create_UIBox_view_code()
 	)
 end
 
+local function all_hashes_match()
+	if not MP.LOBBY.players[MP.LOBBY.player_id] or not MP.LOBBY.players[MP.LOBBY.player_id].hash then
+		return true
+	end
+
+	local hash = MP.LOBBY.players[MP.LOBBY.player_id].hash
+	for _, player in pairs(MP.LOBBY.players) do
+		if player.hash ~= hash then
+			return false
+		end
+	end
+	return true
+end
+
 function G.UIDEF.create_UIBox_lobby_menu()
 	local text_scale = 0.45
 	local back = MP.LOBBY.config.different_decks and MP.LOBBY.deck.back or MP.LOBBY.config.back
@@ -126,12 +140,7 @@ function G.UIDEF.create_UIBox_lobby_menu()
 									scale = 0.3,
 									shadow = true,
 									text = (
-										(
-												(MP.LOBBY.host and MP.LOBBY.host.hash)
-												and (MP.LOBBY.guest and MP.LOBBY.guest.hash)
-												and (MP.LOBBY.host.hash ~= MP.LOBBY.guest.hash)
-											)
-											and (localize("k_mod_hash_warning"))
+											not all_hashes_match() and (localize("k_mod_hash_warning"))
 										or ((MP.LOBBY.username == "Guest") and (localize("k_set_name")))
 										or " "
 									),
@@ -264,7 +273,7 @@ function G.UIDEF.create_UIBox_lobby_menu()
 													},
 												},
 											},
-											MP.LOBBY.host.username and {
+											MP.LOBBY.player_id and MP.LOBBY.players[MP.LOBBY.player_id] and MP.LOBBY.players[MP.LOBBY.player_id].username and {
 												n = G.UIT.R,
 												config = {
 													padding = 0.1,
@@ -274,7 +283,7 @@ function G.UIDEF.create_UIBox_lobby_menu()
 													{
 														n = G.UIT.T,
 														config = {
-															ref_table = MP.LOBBY.host,
+															ref_table = MP.LOBBY.players[MP.LOBBY.player_id],
 															ref_value = "username",
 															shadow = true,
 															scale = text_scale * 0.8,
@@ -287,21 +296,10 @@ function G.UIDEF.create_UIBox_lobby_menu()
 															w = 0.1,
 															h = 0.1,
 														},
-													},
-													MP.LOBBY.host.hash and UIBox_button({
-														id = "host_hash",
-														button = "view_host_hash",
-														label = { MP.LOBBY.host.hash },
-														minw = 0.75,
-														minh = 0.3,
-														scale = 0.25,
-														shadow = false,
-														colour = G.C.PURPLE,
-														col = true,
-													}),
+													}
 												},
 											} or nil,
-											MP.LOBBY.guest.username and {
+											MP.LOBBY.players and MP.LOBBY.player_count > 1 and {
 												n = G.UIT.R,
 												config = {
 													padding = 0.1,
@@ -311,8 +309,8 @@ function G.UIDEF.create_UIBox_lobby_menu()
 													{
 														n = G.UIT.T,
 														config = {
-															ref_table = MP.LOBBY.guest,
-															ref_value = "username",
+															ref_table = { count = MP.LOBBY.player_count - 1 .. " others" },
+															ref_value = "count",
 															shadow = true,
 															scale = text_scale * 0.8,
 															colour = G.C.UI.TEXT_LIGHT,
@@ -325,10 +323,10 @@ function G.UIDEF.create_UIBox_lobby_menu()
 															h = 0.1,
 														},
 													},
-													MP.LOBBY.guest.hash and UIBox_button({
+													UIBox_button({
 														id = "host_guest",
 														button = "view_guest_hash",
-														label = { MP.LOBBY.guest.hash },
+														label = { all_hashes_match() and "Match" or "Mismatch" },
 														minw = 0.75,
 														minh = 0.3,
 														scale = 0.25,
@@ -762,23 +760,27 @@ function G.UIDEF.create_UIBox_custom_seed_overlay()
 end
 
 function G.UIDEF.create_UIBox_view_hash(type)
-	return (
-		create_UIBox_generic_options({
-			contents = {
-				{
-					n = G.UIT.C,
-					config = {
-						padding = 0.2,
-						align = "cm",
+	if type == "self" then
+		return (
+			create_UIBox_generic_options({
+				contents = {
+					{
+						n = G.UIT.C,
+						config = {
+							padding = 0.2,
+							align = "cm",
+						},
+						nodes = MP.UI.hash_str_to_view(
+							type == MP.LOBBY.players[MP.LOBBY.player_id].hash,
+							G.C.UI.TEXT_LIGHT
+						),
 					},
-					nodes = MP.UI.hash_str_to_view(
-						type == "host" and MP.LOBBY.host.hash_str or MP.LOBBY.guest.hash_str,
-						G.C.UI.TEXT_LIGHT
-					),
 				},
-			},
-		})
-	)
+			})
+		)
+	elseif type == "others" then
+		return MP.UI.create_UIBox_players()
+	end
 end
 
 function MP.UI.hash_str_to_view(str, text_colour)
@@ -813,13 +815,13 @@ end
 
 G.FUNCS.view_host_hash = function(e)
 	G.FUNCS.overlay_menu({
-		definition = G.UIDEF.create_UIBox_view_hash("host"),
+		definition = G.UIDEF.create_UIBox_view_hash("self"),
 	})
 end
 
 G.FUNCS.view_guest_hash = function(e)
 	G.FUNCS.overlay_menu({
-		definition = G.UIDEF.create_UIBox_view_hash("guest"),
+		definition = G.UIDEF.create_UIBox_view_hash("others"),
 	})
 end
 

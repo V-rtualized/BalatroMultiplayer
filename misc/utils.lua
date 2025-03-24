@@ -305,9 +305,20 @@ function add_nemesis_info(info_queue)
 		info_queue[#info_queue + 1] = {
 			set = "Other",
 			key = "current_nemesis",
-			vars = { MP.LOBBY.is_host and MP.LOBBY.guest.username or MP.LOBBY.host.username },
+			vars = { MP.LOBBY.enemy_id and MP.LOBBY.players[MP.LOBBY.enemy_id].username or "No one" },
 		}
 	end
+end
+
+function MP.UTILS.get_host_id()
+	for id, player in pairs(MP.LOBBY.players) do
+		if player.is_host then
+			return player.id
+		end
+	end
+
+	-- This shouldn't happen
+	return nil
 end
 
 function MP.UTILS.shallow_copy(t)
@@ -316,6 +327,32 @@ function MP.UTILS.shallow_copy(t)
 		copy[k] = v
 	end
 	return copy
+end
+
+function MP.UTILS.string_to_table(str, pair_seperator, key_value_seperator)
+	local tbl = {}
+	for part in string.gmatch(str, "([^"..pair_seperator.."]+)") do
+		local key, value = string.match(part, "([^"..key_value_seperator.."]+)"..key_value_seperator.."(.+)")
+		if key and value then
+			tbl[key] = value
+		end
+	end
+	return tbl
+end
+
+-- Turn any characters that were needed for parsing back into their original characters
+function MP.UTILS.postProcessStringFromNetwork(str)
+	local processed_str = str
+
+	-- Seperated each call for readability's sake
+	processed_str = string.gsub(processed_str, "{a}", ",") -- Needed to seperate action values
+	processed_str = string.gsub(processed_str, "{b}", ":") -- Needed to parse action values
+
+	processed_str = string.gsub(processed_str, "{c}", "|") -- Needed to seperate sub-list entries
+	processed_str = string.gsub(processed_str, "{d}", "-") -- Needed to seperate sub-list entry values
+	processed_str = string.gsub(processed_str, "{e}", ">") -- Needed to parse sub-list entry values
+
+	return processed_str
 end
 
 -- Creates an array of integers containing the range of numbers between and including min and max, using step as an increment. (Won't include max if step skips it)

@@ -24,23 +24,24 @@ function MP.UI.lobby_info()
 end
 
 function MP.UI.create_UIBox_players()
-	local players = {
-		MP.UI.create_UIBox_player_row("host"),
-		MP.UI.create_UIBox_player_row("guest"),
-	}
+	local player_boxes = {}
+
+	for k, v in pairs(MP.LOBBY.players) do
+		table.insert(player_boxes, MP.UI.create_UIBox_player_row(k))
+	end
 
 	local t = {
 		n = G.UIT.ROOT,
 		config = { align = "cm", minw = 3, padding = 0.1, r = 0.1, colour = G.C.CLEAR },
 		nodes = {
-			{ n = G.UIT.R, config = { align = "cm", padding = 0.04 }, nodes = players },
+			{ n = G.UIT.R, config = { align = "cm", padding = 0.04 }, nodes = player_boxes },
 		},
 	}
 
 	return t
 end
 
-function MP.UI.create_UIBox_mods_list(type)
+function MP.UI.create_UIBox_mods_list(player_id)
 	return {
 		n = G.UIT.R,
 		config = { align = "cm", colour = G.C.WHITE, r = 0.1 },
@@ -49,7 +50,7 @@ function MP.UI.create_UIBox_mods_list(type)
 				n = G.UIT.C,
 				config = { align = "cm" },
 				nodes = MP.UI.hash_str_to_view(
-					type == "host" and MP.LOBBY.host.hash_str or MP.LOBBY.guest.hash_str,
+					MP.LOBBY.players[player_id].hash,
 					G.C.UI.TEXT_DARK
 				),
 			},
@@ -57,14 +58,22 @@ function MP.UI.create_UIBox_mods_list(type)
 	}
 end
 
-function MP.UI.create_UIBox_player_row(type)
-	local player_name = type == "host" and MP.LOBBY.host.username or MP.LOBBY.guest.username
-	local lives = MP.GAME.enemy.lives
-	local highest_score = MP.GAME.enemy.highest_score
-	if (type == "host" and MP.LOBBY.is_host) or (type == "guest" and not MP.LOBBY.is_host) then
-		lives = MP.GAME.lives
-		highest_score = MP.GAME.highest_score
+function MP.UI.create_UIBox_player_row(player_id)
+	local player_name = MP.LOBBY.players[player_id].username
+
+	local lives = nil
+	local highest_score = nil
+
+	if MP.LOBBY.is_started then
+		if player_id == MP.LOBBY.player_id then
+			lives = MP.GAME.lives
+			highest_score = MP.GAME.highest_score
+		elseif MP.GAME.enemies and MP.GAME.enemies[player_id] then
+			lives = MP.LOBBY.players[player_id].lives
+			highest_score = MP.LOBBY.players[player_id].highest_score
+		end
 	end
+
 	return {
 		n = G.UIT.R,
 		config = {
@@ -77,7 +86,7 @@ function MP.UI.create_UIBox_player_row(type)
 			force_focus = true,
 			on_demand_tooltip = {
 				text = { localize("k_mods_list") },
-				filler = { func = MP.UI.create_UIBox_mods_list, args = type },
+				filler = { func = MP.UI.create_UIBox_mods_list, args = player_id },
 			},
 		},
 		nodes = {
@@ -100,7 +109,7 @@ function MP.UI.create_UIBox_player_row(type)
 							{
 								n = G.UIT.T,
 								config = {
-									text = tostring(lives) .. " " .. localize("k_lives"),
+									text = tostring(MP.LOBBY.is_started and lives or MP.LOBBY.config.starting_lives) .. " " .. localize("k_lives"),
 									scale = 0.4,
 									colour = G.C.UI.TEXT_LIGHT,
 								},
@@ -167,7 +176,7 @@ function MP.UI.create_UIBox_player_row(type)
 					{
 						n = G.UIT.T,
 						config = {
-							text = number_format(highest_score, 1000000),
+							text = number_format(MP.LOBBY.is_started and highest_score or 0, 1000000),
 							scale = 0.45,
 							colour = G.C.FILTER,
 							shadow = true,

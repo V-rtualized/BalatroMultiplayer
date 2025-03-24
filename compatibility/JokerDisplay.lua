@@ -98,13 +98,14 @@ if SMODS.Mods["JokerDisplay"] and SMODS.Mods["JokerDisplay"].can_load then
 			},
 			calc_function = function(card)
 				card.joker_display_values.skip_diff = G.GAME.skips ~= nil
-						and MP.GAME.enemy.skips ~= nil
+						and MP.GAME.enemies[MP.LOBBY.enemy_id]
+						and MP.GAME.enemies[MP.LOBBY.enemy_id].skips ~= nil
 						and localize({
 							type = "variable",
-							key = MP.GAME.enemy.skips > G.GAME.skips and "a_mp_skips_behind"
-								or MP.GAME.enemy.skips == G.GAME.skips and "a_mp_skips_tied"
+							key = MP.GAME.enemies[MP.LOBBY.enemy_id].skips > G.GAME.skips and "a_mp_skips_behind"
+								or MP.GAME.enemies[MP.LOBBY.enemy_id].skips == G.GAME.skips and "a_mp_skips_tied"
 								or "a_mp_skips_ahead",
-							vars = { math.abs(MP.GAME.enemy.skips - G.GAME.skips) },
+							vars = { math.abs(MP.GAME.enemies[MP.LOBBY.enemy_id].skips - G.GAME.skips) },
 						})[1]
 					or ""
 			end,
