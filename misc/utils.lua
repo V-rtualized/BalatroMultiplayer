@@ -317,3 +317,17 @@ function MP.UTILS.shallow_copy(t)
 	end
 	return copy
 end
+
+-- Creates an array of integers containing the range of numbers between and including min and max, using step as an increment. (Won't include max if step skips it)
+function MP.UTILS.init_increment_array(min, max, step)
+	local range_array = {}
+	for i = min, max, step do
+		table.insert(range_array, i)
+	end
+	return range_array
+end
+
+-- Creates an array of integers containing the range of numbers between and including the min and max
+function MP.UTILS.init_range_array(min, max)
+	return MP.UTILS.init_increment_array(min, max, 1)
+end

@@ -665,26 +665,36 @@ function G.UIDEF.create_UIBox_lobby_options()
 														enabled_ref_table = MP.LOBBY,
 														enabled_ref_value = "is_host",
 														label = localize("b_opts_lives"),
-														options = {
-															1,
-															2,
-															3,
-															4,
-															5,
-															6,
-															7,
-															8,
-															9,
-															10,
-															11,
-															12,
-															13,
-															14,
-															15,
-															16,
-														},
+														options = MP.UTILS.init_range_array(1, 16),
 														current_option = MP.LOBBY.config.starting_lives,
 														opt_callback = "change_starting_lives",
+													}),
+													Disableable_Option_Cycle({
+														id = "starting_money_modifier_option",
+														enabled_ref_table = MP.LOBBY,
+														enabled_ref_value = "is_host",
+														label = localize("b_opts_money_modifier"),
+														options = MP.UTILS.init_increment_array(0, 50, 5),
+														current_option = MP.LOBBY.config.starting_money_modifier + 1,
+														opt_callback = "change_starting_money_modifier",
+													}),
+													Disableable_Option_Cycle({
+														id = "starting_hand_modifier_option",
+														enabled_ref_table = MP.LOBBY,
+														enabled_ref_value = "is_host",
+														label = localize("b_opts_hand_modifier"),
+														options = MP.UTILS.init_range_array(0, 16),
+														current_option = MP.LOBBY.config.starting_hand_modifier + 1,
+														opt_callback = "change_starting_hand_modifier",
+													}),
+													Disableable_Option_Cycle({
+														id = "starting_discard_modifier_option",
+														enabled_ref_table = MP.LOBBY,
+														enabled_ref_value = "is_host",
+														label = localize("b_opts_discard_modifier"),
+														options = MP.UTILS.init_range_array(0, 16),
+														current_option = MP.LOBBY.config.starting_discard_modifier + 1,
+														opt_callback = "change_starting_discard_modifier",
 													}),
 												},
 											},
@@ -820,6 +830,24 @@ end
 
 G.FUNCS.change_starting_lives = function(args)
 	MP.LOBBY.config.starting_lives = args.to_val
+	send_lobby_options()
+end
+
+G.FUNCS.change_starting_money_modifier = function(args)
+	MP.LOBBY.config.starting_money_modifier = args.to_val
+	print("Money: " .. args.to_val)
+	send_lobby_options()
+end
+
+G.FUNCS.change_starting_hand_modifier = function(args)
+	MP.LOBBY.config.starting_hand_modifier = args.to_val
+	print("Hands: " .. args.to_val)
+	send_lobby_options()
+end
+
+G.FUNCS.change_starting_discard_modifier = function(args)
+	MP.LOBBY.config.starting_discard_modifier = args.to_val
+	print("Discards: " .. args.to_val)
 	send_lobby_options()
 end
 
