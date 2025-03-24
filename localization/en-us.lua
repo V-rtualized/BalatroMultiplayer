@@ -253,6 +253,7 @@ return {
 				"one person, if",
 				"you like it consider",
 			},
+			ml_lobby_info = { "Lobby", "Info" },
 			loc_ready = "Ready for PvP",
 			loc_selecting = "Selecting a Blind",
 			loc_shop = "Shopping",
