@@ -779,7 +779,7 @@ function G.UIDEF.create_UIBox_view_hash(type)
 			})
 		)
 	elseif type == "others" then
-		return MP.UI.create_UIBox_players()
+		return MP.UI.lobby_info()
 	end
 end
 

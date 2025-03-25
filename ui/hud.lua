@@ -23,6 +23,17 @@ function MP.UI.lobby_info()
 	})
 end
 
+function MP.UI.show_message(message)
+	attention_text({
+		scale = 0.8,
+		text = message,
+		hold = 5,
+		align = "cm",
+		offset = { x = 0, y = -1.5 },
+		major = G.play,
+	})
+end
+
 function MP.UI.create_UIBox_players()
 	local player_boxes = {}
 

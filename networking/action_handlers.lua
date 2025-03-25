@@ -85,6 +85,10 @@ local function action_error(message)
 	MP.UTILS.overlay_message(message)
 end
 
+local function action_message(loc_key)
+	MP.UI.show_message(localize(loc_key))
+end
+
 local function action_keep_alive()
 	Client.send("action:keepAliveAck")
 end
@@ -114,11 +118,6 @@ local function action_start_blind()
 	MP.GAME.ready_blind = false
 	MP.GAME.timer_started = false
 	MP.GAME.timer = 120
-
-	if not MP.LOBBY.enemy_id then
-		G.FUNCS.reroll_boss()
-		return
-	end
 
 	if MP.GAME.next_blind_context then
 		G.FUNCS.select_blind(MP.GAME.next_blind_context)
@@ -736,6 +735,8 @@ function Game:update(dt)
 				action_start_ante_timer(parsedAction.time)
 			elseif parsedAction.action == "error" then
 				action_error(parsedAction.message)
+			elseif parsedAction.action == "message" then
+				action_message(parsedAction.locKey)
 			elseif parsedAction.action == "keepAlive" then
 				action_keep_alive()
 			end

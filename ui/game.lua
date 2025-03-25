@@ -831,17 +831,13 @@ function Game:update_hand_played(dt)
 			func = function()
 				MP.ACTIONS.play_hand(G.GAME.chips, G.GAME.current_round.hands_left)
 				-- Set blind chips to enemy score
-				G.GAME.blind.chips = MP.GAME.enemies[MP.LOBBY.enemy_id].score
+				if G.GAME.blind and MP.GAME.enemies[MP.LOBBY.enemy_id] then
+					G.GAME.blind.chips = MP.GAME.enemies[MP.LOBBY.enemy_id].score
+				end
 				-- For now, never advance to next round
 				if G.GAME.current_round.hands_left < 1 then
-					attention_text({
-						scale = 0.8,
-						text = localize("k_wait_enemy"),
-						hold = 5,
-						align = "cm",
-						offset = { x = 0, y = -1.5 },
-						major = G.play,
-					})
+					MP.UI.show_message(localize("k_wait_enemy"))
+					
 					if G.hand.cards[1] then
 						eval_hand_and_jokers()
 						G.FUNCS.draw_from_hand_to_discard()
@@ -1688,7 +1684,7 @@ function Blind:disable()
 end
 
 G.FUNCS.multiplayer_blind_chip_UI_scale = function(e)
-	if not MP.LOBBY.enemy_id then
+	if not MP.LOBBY.enemy_id or not MP.GAME.enemies[MP.LOBBY.enemy_id] then
 		return
 	end
 

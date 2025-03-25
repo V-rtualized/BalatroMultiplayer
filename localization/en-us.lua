@@ -258,7 +258,8 @@ return {
 			loc_selecting = "Selecting a Blind",
 			loc_shop = "Shopping",
 			loc_playing = "Playing ",
-			loc_none = "None"
+			loc_none = "None",
+			msg_no_enemy = "Consider yourself lucky...",
 		},
 		v_dictionary = {
 			a_mp_art = { "Art: #1#" },
