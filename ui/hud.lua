@@ -71,6 +71,19 @@ end
 
 function MP.UI.create_UIBox_player_row(player_id)
 	local player_name = MP.LOBBY.players[player_id].username
+	if player_id == MP.LOBBY.player_id then
+		player_name = player_name .. " (YOU)"
+	end
+
+	-- Get color
+	local color = darken(G.C.JOKER_GREY, 0.1)
+	if MP.LOBBY.is_started then
+		if player_id == MP.LOBBY.player_id then
+			color = G.C.BLUE
+		elseif player_id == MP.LOBBY.enemy_id then
+			color = darken(G.C.RED, 0.2)
+		end
+	end
 
 	local lives = nil
 	local highest_score = nil
@@ -91,7 +104,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 			align = "cm",
 			padding = 0.05,
 			r = 0.1,
-			colour = darken(G.C.JOKER_GREY, 0.1),
+			colour = color,
 			emboss = 0.05,
 			hover = true,
 			force_focus = true,
