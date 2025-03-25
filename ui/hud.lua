@@ -93,8 +93,8 @@ function MP.UI.create_UIBox_player_row(player_id)
 			lives = MP.GAME.lives
 			highest_score = MP.GAME.highest_score
 		elseif MP.GAME.enemies and MP.GAME.enemies[player_id] then
-			lives = MP.LOBBY.players[player_id].lives
-			highest_score = MP.LOBBY.players[player_id].highest_score
+			lives = MP.GAME.enemies[player_id].lives
+			highest_score = MP.GAME.enemies[player_id].highest_score
 		end
 	end
 
