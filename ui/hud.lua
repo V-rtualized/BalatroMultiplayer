@@ -11,7 +11,7 @@ function MP.UI.lobby_info()
 			create_tabs({
 				tabs = {
 					{
-						label = localize("b_players"),
+						label = MP.LOBBY.player_count .. " " .. localize("b_players"),
 						chosen = true,
 						tab_definition_function = MP.UI.create_UIBox_players,
 					},
@@ -32,6 +32,73 @@ function MP.UI.show_message(message)
 		offset = { x = 0, y = -1.5 },
 		major = G.play,
 	})
+end
+
+function MP.UI.show_enemy_location()
+	local row_dollars_chips = G.HUD:get_UIE_by_ID("row_dollars_chips")
+	if row_dollars_chips then
+		row_dollars_chips.children[1]:remove()
+		row_dollars_chips.children[1] = nil
+		G.HUD:add_child({
+			n = G.UIT.C,
+			config = { align = "cm", padding = 0.1 },
+			nodes = {
+				{
+					n = G.UIT.C,
+					config = { align = "cm", minw = 1.3 },
+					nodes = {
+						{
+							n = G.UIT.R,
+							config = { align = "cm", padding = 0, maxw = 1.3 },
+							nodes = {
+								{
+									n = G.UIT.T,
+									config = {
+										text = localize("ml_enemy_loc")[1],
+										scale = 0.42,
+										colour = G.C.UI.TEXT_LIGHT,
+										shadow = true,
+									},
+								},
+							},
+						},
+						{
+							n = G.UIT.R,
+							config = { align = "cm", padding = 0, maxw = 1.3 },
+							nodes = {
+								{
+									n = G.UIT.T,
+									config = {
+										text = localize("ml_enemy_loc")[2],
+										scale = 0.42,
+										colour = G.C.UI.TEXT_LIGHT,
+										shadow = true,
+									},
+								},
+							},
+						},
+					},
+				},
+				{
+					n = G.UIT.C,
+					config = { align = "cm", minw = 3.3, minh = 0.7, r = 0.1, colour = G.C.DYN_UI.BOSS_DARK },
+					nodes = {
+						{
+							n = G.UIT.T,
+							config = {
+								ref_table = MP.LOBBY.enemy_id and MP.GAME.enemies[MP.LOBBY.enemy_id] or {location = "None"},
+								ref_value = "location",
+								scale = 0.35,
+								colour = G.C.WHITE,
+								id = "chip_UI_count",
+								shadow = true,
+							},
+						},
+					},
+				},
+			},
+		}, row_dollars_chips)
+	end
 end
 
 function MP.UI.create_UIBox_players()
@@ -103,6 +170,8 @@ function MP.UI.create_UIBox_player_row(player_id)
 			highest_score = MP.GAME.enemies[player_id].highest_score
 			note = lives > 0 and MP.GAME.enemies[player_id].location or "Dead"
 		end
+	elseif MP.LOBBY.players[player_id] and MP.LOBBY.players[player_id].is_host then
+		note = note .. " (Host)"
 	end
 
 	return {
@@ -229,8 +298,30 @@ function MP.UI.create_UIBox_player_row(player_id)
 					},
 				},
 			},
+				
+			MP.LOBBY.is_host and MP.UI.Disableable_Button({
+				id = "kick_" .. player_id,
+				button = "lobby_kick_player",
+				button_args = { player_id = player_id },
+				colour = G.C.RED,
+				label = { localize("b_kick") },
+				scale = 0.45,
+				minw = 1.3,
+				minh = 0.45,
+				
+				col = true,
+				enabled_ref_table = { enabled = player_id ~= MP.LOBBY.player_id },
+				enabled_ref_value = "enabled",
+			}) or nil,
 		},
 	}
+end
+
+function G.FUNCS.lobby_kick_player(e)
+	local player_id = e.config.button_args.player_id
+	if player_id and MP.LOBBY.is_host then
+		MP.ACTIONS.kick_player(player_id)
+	end
 end
 
 local ease_round_ref = ease_round

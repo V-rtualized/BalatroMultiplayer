@@ -837,7 +837,7 @@ function Game:update_hand_played(dt)
 				-- For now, never advance to next round
 				if G.GAME.current_round.hands_left < 1 then
 					MP.UI.show_message(localize("k_wait_enemy"))
-					
+
 					if G.hand.cards[1] then
 						eval_hand_and_jokers()
 						G.FUNCS.draw_from_hand_to_discard()
@@ -1695,73 +1695,6 @@ G.FUNCS.multiplayer_blind_chip_UI_scale = function(e)
 	end
 end
 
-local function show_enemy_location()
-	local row_dollars_chips = G.HUD:get_UIE_by_ID("row_dollars_chips")
-	if row_dollars_chips then
-		row_dollars_chips.children[1]:remove()
-		row_dollars_chips.children[1] = nil
-		G.HUD:add_child({
-			n = G.UIT.C,
-			config = { align = "cm", padding = 0.1 },
-			nodes = {
-				{
-					n = G.UIT.C,
-					config = { align = "cm", minw = 1.3 },
-					nodes = {
-						{
-							n = G.UIT.R,
-							config = { align = "cm", padding = 0, maxw = 1.3 },
-							nodes = {
-								{
-									n = G.UIT.T,
-									config = {
-										text = localize("ml_enemy_loc")[1],
-										scale = 0.42,
-										colour = G.C.UI.TEXT_LIGHT,
-										shadow = true,
-									},
-								},
-							},
-						},
-						{
-							n = G.UIT.R,
-							config = { align = "cm", padding = 0, maxw = 1.3 },
-							nodes = {
-								{
-									n = G.UIT.T,
-									config = {
-										text = localize("ml_enemy_loc")[2],
-										scale = 0.42,
-										colour = G.C.UI.TEXT_LIGHT,
-										shadow = true,
-									},
-								},
-							},
-						},
-					},
-				},
-				{
-					n = G.UIT.C,
-					config = { align = "cm", minw = 3.3, minh = 0.7, r = 0.1, colour = G.C.DYN_UI.BOSS_DARK },
-					nodes = {
-						{
-							n = G.UIT.T,
-							config = {
-								ref_table = MP.LOBBY.enemy_id and MP.GAME.enemies[MP.LOBBY.enemy_id] or {location = "None"},
-								ref_value = "location",
-								scale = 0.35,
-								colour = G.C.WHITE,
-								id = "chip_UI_count",
-								shadow = true,
-							},
-						},
-					},
-				},
-			},
-		}, row_dollars_chips)
-	end
-end
-
 local function hide_enemy_location()
 	local row_dollars_chips = G.HUD:get_UIE_by_ID("row_dollars_chips")
 	if row_dollars_chips then
@@ -1849,7 +1782,7 @@ function Game:update_shop(dt)
 		updated_location = true
 		MP.ACTIONS.set_location("loc_shop")
 		MP.GAME.spent_before_shop = to_big(MP.GAME.spent_total) + to_big(0)
-		show_enemy_location()
+		MP.UI.show_enemy_location()
 	end
 	if G.STATE_COMPLETE and updated_location then
 		updated_location = false
@@ -1863,7 +1796,7 @@ function Game:update_blind_select(dt)
 	if MP.LOBBY.code and not G.STATE_COMPLETE and not updated_location then
 		updated_location = true
 		MP.ACTIONS.set_location("loc_selecting")
-		show_enemy_location()
+		MP.UI.show_enemy_location()
 	end
 	if G.STATE_COMPLETE and updated_location then
 		updated_location = false

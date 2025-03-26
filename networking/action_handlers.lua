@@ -66,8 +66,6 @@ local function action_lobbyInfo(player_id, players_string, is_started)
 
 	MP.LOBBY.ready_to_start = MP.LOBBY.is_host and MP.LOBBY.player_count >= 2 and not MP.LOBBY.is_started
 
-	print(dump(MP.LOBBY))
-
 	if not MP.LOBBY.is_started then
 		if MP.LOBBY.is_host then
 			MP.ACTIONS.lobby_options()
@@ -77,6 +75,11 @@ local function action_lobbyInfo(player_id, players_string, is_started)
 			MP.ACTIONS.update_player_usernames()
 		end
 	end
+end
+
+local function action_kicked_from_lobby()
+	MP.LOBBY.code = nil
+	MP.UI.update_connection_status()
 end
 
 local function action_error(message)
@@ -111,6 +114,7 @@ local function action_start_game(seed, stake_str)
 	if not MP.LOBBY.config.different_seeds and MP.LOBBY.config.custom_seed ~= "random" then
 		seed = MP.LOBBY.config.custom_seed
 	end
+	G.FUNCS.exit_overlay_menu()
 	G.FUNCS.lobby_start_run(nil, { seed = seed, stake = stake })
 end
 
@@ -187,6 +191,10 @@ local function action_enemy_info(player_id, enemy_id, score_str, hands_left_str,
 	if MP.is_pvp_boss() then
 		G.HUD_blind:get_UIE_by_ID("HUD_blind_count"):juice_up()
 		G.HUD_blind:get_UIE_by_ID("dollars_to_be_earned"):juice_up()
+	end
+
+	if MP.GAME.ready_blind then
+		MP.UI.show_enemy_location()
 	end
 end
 
@@ -320,6 +328,11 @@ local function enemyLocation(options)
 	end
 
 	MP.GAME.enemies[options.playerId].location = loc_location .. value
+
+	if MP.GAME.ready_blind and options.playerId == MP.LOBBY.enemy_id then
+		MP.UI.show_enemy_location()
+	end
+
 end
 
 local function action_version()
@@ -508,6 +521,10 @@ function MP.ACTIONS.leave_lobby()
 	Client.send("action:leaveLobby")
 end
 
+function MP.ACTIONS.kick_player(player_id)
+	Client.send(string.format("action:kickPlayer,playerId:%s", player_id))
+end
+
 function MP.ACTIONS.start_game()
 	Client.send("action:startGame")
 end
@@ -680,6 +697,8 @@ function Game:update(dt)
 					parsedAction.players,
 					parsedAction.isStarted
 				)
+			elseif parsedAction.action == "kickedFromLobby" then
+				action_kicked_from_lobby()
 			elseif parsedAction.action == "startGame" then
 				action_start_game(parsedAction.seed, parsedAction.stake)
 			elseif parsedAction.action == "startBlind" then

@@ -68,6 +68,8 @@ function MP.reset_game_states()
 		timer_started = false,
 	}
 
+	MP.GAME.enemies = {}
+
 	for k, player in pairs(MP.LOBBY.players) do
 		MP.GAME.enemies[player.id] = {
 			enemy_id = nil,

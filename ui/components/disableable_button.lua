@@ -5,8 +5,10 @@ function MP.UI.Disableable_Button(args)
 	args.text_colour = args.text_colour or G.C.UI.TEXT_LIGHT
 	args.disabled_text = args.disabled_text or args.label
 	args.label = not enabled and args.disabled_text or args.label
+	args.button_args = args.button_args or {}
 
 	local button_component = UIBox_button(args)
+	button_component.nodes[1].config.button_args = enabled and args.button_args or nil
 	button_component.nodes[1].config.button = enabled and args.button or nil
 	button_component.nodes[1].config.hover = enabled
 	button_component.nodes[1].config.shadow = enabled

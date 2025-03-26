@@ -177,6 +177,7 @@ return {
 			b_leave_lobby = "Leave Lobby",
 			b_mp_discord = "Balatro Multiplayer Discord Server",
 			b_start = "START",
+			b_kick = "KICK",
 			b_wait_for_host_start = { "WAITING FOR", "HOST TO START" },
 			b_wait_for_players = { "WAITING FOR", "PLAYERS" },
 			b_lobby_options = "LOBBY OPTIONS",
