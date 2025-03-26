@@ -38,7 +38,7 @@ SMODS.Joker({
 		return MP.LOBBY.code and MP.LOBBY.config.multiplayer_jokers
 	end,
 	update = function(self, card, dt)
-		if G.STAGE == G.STAGES.RUN and G.GAME.skips ~= nil and  MP.LOBBY.enemy_id and MP.GAME.enemies[MP.LOBBY.enemy_id].skips ~= nil then
+		if G.STAGE == G.STAGES.RUN and G.GAME.skips ~= nil and  MP.LOBBY.enemy_id and MP.GAME.enemies[MP.LOBBY.enemy_id] and MP.GAME.enemies[MP.LOBBY.enemy_id].skips ~= nil then
 			local skip_diff = (math.max(G.GAME.skips - MP.GAME.enemies[MP.LOBBY.enemy_id].skips, 0))
 			card.ability.extra.hands = skip_diff * card.ability.extra.extra_hands
 			card.ability.extra.discards = skip_diff * card.ability.extra.extra_discards

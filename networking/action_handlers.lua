@@ -468,9 +468,9 @@ local function action_receive_end_game_jokers(keys)
 	end
 end
 
-local function action_get_end_game_jokers()
+local function action_get_end_game_jokers(reciever_id)
 	if not G.jokers or not G.jokers.cards then
-		Client.send("action:receiveEndGameJokers,keys:")
+		Client.send("action:receiveEndGameJokers,recieverId:".. reciever_id ..",keys:")
 		return
 	end
 	local jokers = G.jokers.cards
@@ -478,7 +478,7 @@ local function action_get_end_game_jokers()
 	for _, card in pairs(jokers) do
 		keys = keys .. card.config.center.key .. ";"
 	end
-	Client.send(string.format("action:receiveEndGameJokers,keys:%s", keys))
+	Client.send(string.format("action:receiveEndGameJokers,recieverId:".. reciever_id ..",keys:%s", keys))
 end
 
 local function action_start_ante_timer(time)
@@ -728,7 +728,7 @@ function Game:update(dt)
 			elseif parsedAction.action == "magnetResponse" then
 				action_magnet_response(parsedAction.key)
 			elseif parsedAction.action == "getEndGameJokers" then
-				action_get_end_game_jokers()
+				action_get_end_game_jokers(parsedAction.recieverId)
 			elseif parsedAction.action == "receiveEndGameJokers" then
 				action_receive_end_game_jokers(parsedAction.keys)
 			elseif parsedAction.action == "startAnteTimer" then

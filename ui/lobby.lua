@@ -837,19 +837,16 @@ end
 
 G.FUNCS.change_starting_money_modifier = function(args)
 	MP.LOBBY.config.starting_money_modifier = args.to_val
-	print("Money: " .. args.to_val)
 	send_lobby_options()
 end
 
 G.FUNCS.change_starting_hand_modifier = function(args)
 	MP.LOBBY.config.starting_hand_modifier = args.to_val
-	print("Hands: " .. args.to_val)
 	send_lobby_options()
 end
 
 G.FUNCS.change_starting_discard_modifier = function(args)
 	MP.LOBBY.config.starting_discard_modifier = args.to_val
-	print("Discards: " .. args.to_val)
 	send_lobby_options()
 end
 

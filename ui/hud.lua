@@ -57,14 +57,14 @@ function MP.UI.create_UIBox_mods_list(player_id)
 		n = G.UIT.R,
 		config = { align = "cm", colour = G.C.WHITE, r = 0.1 },
 		nodes = {
-			{
+			MP.LOBBY.players[player_id] and MP.LOBBY.players[player_id].hash and{
 				n = G.UIT.C,
 				config = { align = "cm" },
 				nodes = MP.UI.hash_str_to_view(
 					MP.LOBBY.players[player_id].hash,
 					G.C.UI.TEXT_DARK
 				),
-			},
+			} or nil,
 		},
 	}
 end
