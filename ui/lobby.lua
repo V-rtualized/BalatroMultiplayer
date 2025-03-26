@@ -968,7 +968,7 @@ function G.FUNCS.display_lobby_main_menu_UI(e)
 end
 
 function G.FUNCS.mp_return_to_lobby()
-	MP.ACTIONS.stop_game()
+	MP.ACTIONS.return_to_lobby()
 end
 
 function G.FUNCS.custom_seed_overlay(e)

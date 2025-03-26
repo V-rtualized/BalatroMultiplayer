@@ -167,7 +167,7 @@ local function action_enemy_info(player_id, enemy_id, score_str, hands_left_str,
 
 	-- Only update enemy if provided
 	if enemy_id ~= nil then
-		if enemy_id ~= "" then
+		if enemy_id ~= "None" then
 			-- Set enemy
 			if player_id == MP.LOBBY.player_id then
 				MP.LOBBY.enemy_id = enemy_id
@@ -538,8 +538,8 @@ function MP.ACTIONS.unready_blind()
 	Client.send("action:unreadyBlind")
 end
 
-function MP.ACTIONS.stop_game()
-	Client.send("action:stopGame")
+function MP.ACTIONS.return_to_lobby()
+	Client.send("action:returnToLobby")
 end
 
 function MP.ACTIONS.fail_round(hands_used)
