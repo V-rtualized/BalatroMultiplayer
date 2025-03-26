@@ -1,4 +1,4 @@
-SMODS.Mods.Multiplayer.credits_tab = function()
+SMODS.Mods.NanoMultiplayer.credits_tab = function()
 	return {
 		n = G.UIT.ROOT,
 		config = {
@@ -65,7 +65,7 @@ SMODS.Mods.Multiplayer.credits_tab = function()
 	}
 end
 
-SMODS.Mods.Multiplayer.config_tab = function()
+SMODS.Mods.NanoMultiplayer.config_tab = function()
 	return {
 		n = G.UIT.ROOT,
 		config = {
