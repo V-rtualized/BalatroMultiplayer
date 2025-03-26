@@ -55,11 +55,11 @@ end
 
 function MP.UTILS.save_username(text)
 	MP.ACTIONS.set_username(text)
-	SMODS.Mods["Multiplayer"].config.username = text
+	SMODS.Mods["NanoMultiplayer"].config.username = text
 end
 
 function MP.UTILS.get_username()
-	return SMODS.Mods["Multiplayer"].config.username
+	return SMODS.Mods["NanoMultiplayer"].config.username
 end
 
 function MP.UTILS.string_split(inputstr, sep)

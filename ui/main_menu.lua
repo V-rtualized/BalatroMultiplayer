@@ -1,4 +1,4 @@
-MULTIPLAYER_VERSION = SMODS.Mods["Multiplayer"].version .. "-MULTIPLAYER"
+MULTIPLAYER_VERSION = SMODS.Mods["NanoMultiplayer"].version .. "-MULTIPLAYER"
 
 function nope_a_joker(card)
 	attention_text({

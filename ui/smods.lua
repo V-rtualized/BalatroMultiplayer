@@ -86,7 +86,7 @@ SMODS.Mods.Multiplayer.config_tab = function()
 					create_toggle({
 						id = "misprint_display_toggle",
 						label = localize("b_misprint_display"),
-						ref_table = SMODS.Mods["Multiplayer"].config,
+						ref_table = SMODS.Mods["NanoMultiplayer"].config,
 						ref_value = "misprint_display",
 					}),
 				},

@@ -87,7 +87,7 @@ end
 MP.reset_game_states()
 
 function MP.load_mp_file(file)
-	local chunk, err = SMODS.load_file(file, "Multiplayer")
+	local chunk, err = SMODS.load_file(file, "NanoMultiplayer")
 	if chunk then
 		local ok, func = pcall(chunk)
 		if ok then
@@ -174,5 +174,5 @@ MP.load_mp_file("misc/mod_hash.lua")
 
 local SOCKET = MP.load_mp_file("networking/socket.lua")
 MP.NETWORKING_THREAD = love.thread.newThread(SOCKET)
-MP.NETWORKING_THREAD:start(SMODS.Mods["Multiplayer"].config.server_url, SMODS.Mods["Multiplayer"].config.server_port)
+MP.NETWORKING_THREAD:start(SMODS.Mods["NanoMultiplayer"].config.server_url, SMODS.Mods["NanoMultiplayer"].config.server_port)
 MP.ACTIONS.connect()
