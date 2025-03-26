@@ -72,7 +72,7 @@ end
 function MP.UI.create_UIBox_player_row(player_id)
 	local player_name = MP.LOBBY.players[player_id].username
 	if player_id == MP.LOBBY.player_id then
-		player_name = player_name .. " (YOU)"
+		player_name = player_name
 	end
 
 	-- Get color
@@ -85,8 +85,14 @@ function MP.UI.create_UIBox_player_row(player_id)
 		end
 	end
 
+	-- Get location
+	local note = "Enemy"
 	local lives = nil
 	local highest_score = nil
+
+	if player_id == MP.LOBBY.player_id then
+		note = "You"
+	end
 
 	if MP.LOBBY.is_started then
 		if player_id == MP.LOBBY.player_id then
@@ -95,6 +101,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 		elseif MP.GAME.enemies and MP.GAME.enemies[player_id] then
 			lives = MP.GAME.enemies[player_id].lives
 			highest_score = MP.GAME.enemies[player_id].highest_score
+			note = lives > 0 and MP.GAME.enemies[player_id].location or "Dead"
 		end
 	end
 
@@ -161,6 +168,20 @@ function MP.UI.create_UIBox_player_row(player_id)
 				n = G.UIT.C,
 				config = { align = "cm", padding = 0.05, colour = G.C.BLACK, r = 0.1 },
 				nodes = {
+					{
+						n = G.UIT.C,
+						config = { align = "cm", padding = 0.01, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.6), minw = 4, maxw = 4  },
+						nodes = {
+							{
+								n = G.UIT.T,
+								config = {
+									text = note,
+									scale = 0.45,
+									colour = G.C.UI.TEXT_LIGHT,
+								},
+							},
+						},
+					},
 					{
 						n = G.UIT.C,
 						config = { align = "cr", padding = 0.01, r = 0.1, colour = G.C.CHIPS, minw = 1.1 },
