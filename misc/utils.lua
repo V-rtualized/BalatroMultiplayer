@@ -340,6 +340,21 @@ function MP.UTILS.string_to_table(str, pair_seperator, key_value_seperator)
 	return tbl
 end
 
+-- Turn any characters necessary for parsing into a special sequence
+function MP.UTILS.preProcessStringForNetwork(str)
+	local processed_str = str
+
+	-- Seperated each call for readability's sake
+	processed_str = string.gsub(processed_str, ",", "{a}") -- Needed to seperate action values
+	processed_str = string.gsub(processed_str, ":", "{b}") -- Needed to parse action values
+
+	processed_str = string.gsub(processed_str, "|", "{c}") -- Needed to seperate sub-list entries
+	processed_str = string.gsub(processed_str, "-", "{d}") -- Needed to seperate sub-list entry values
+	processed_str = string.gsub(processed_str, ">", "{e}") -- Needed to parse sub-list entry values
+
+	return processed_str
+end
+
 -- Turn any characters that were needed for parsing back into their original characters
 function MP.UTILS.postProcessStringFromNetwork(str)
 	local processed_str = str
