@@ -241,7 +241,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 					},
 					{
 						n = G.UIT.C,
-						config = { align = "cm", minw = 4.5, maxw = 4.5 },
+						config = { align = "cm", minw = 4, maxw = 4 },
 						nodes = {
 							{
 								n = G.UIT.T,
@@ -258,8 +258,9 @@ function MP.UI.create_UIBox_player_row(player_id)
 			},
 			{
 				n = G.UIT.C,
-				config = { align = "cm", padding = 0.01, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.6), minw = 4, maxw = 4  },
+				config = { align = "cm", padding = 0.01, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.6), minw = 4.5, maxw = 4.5  },
 				nodes = {
+					{ n = G.UIT.B, config = { w = 0.1, h = 0.01 } },
 					{
 						n = G.UIT.T,
 						config = {
@@ -268,6 +269,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 							colour = G.C.UI.TEXT_LIGHT,
 						},
 					},
+					{ n = G.UIT.B, config = { w = 0.1, h = 0.01 } },
 				},
 			},
 			{
@@ -362,7 +364,7 @@ function MP.UI.create_UIBox_lobby_settings()
 						MP.UI.create_UIBox_value_row("k_current_seed", MP.LOBBY.config.custom_seed == "random" and "Random" or MP.LOBBY.config.custom_seed),		
 					}
 				},
-				MP.UI.create_UIBox_empty_row(1),
+				MP.UI.create_UIBox_empty_row(0.45),
 				{
 					n = G.UIT.R,
 					config = { align = "cm", padding = 0.1, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.2) },
