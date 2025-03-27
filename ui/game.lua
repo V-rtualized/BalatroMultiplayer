@@ -818,7 +818,6 @@ function Game:update_hand_played(dt)
 	-- Ignore for singleplayer or regular blinds
 	if not MP.LOBBY.connected or not MP.LOBBY.code or not MP.is_pvp_boss() then
 		update_hand_played_ref(self, dt)
-		MP.ACTIONS.play_hand(G.GAME.chips, G.GAME.current_round.hands_left)
 		return
 	end
 

@@ -181,7 +181,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 	end
 
 	-- Get inferred values
-	local is_highest_scorer = to_big(highest_score) > to_big(0) and to_big(highest_score) >= MP.GAME.global_highest_score
+	local is_highest_scorer = MP.GAME.global_highest_score and highest_score and to_big(highest_score) > to_big(0) and to_big(highest_score) >= MP.GAME.global_highest_score
 
 	-- Get entry color
 	local color = darken(G.C.JOKER_GREY, 0.1)
