@@ -305,7 +305,7 @@ function add_nemesis_info(info_queue)
 		info_queue[#info_queue + 1] = {
 			set = "Other",
 			key = "current_nemesis",
-			vars = { MP.LOBBY.enemy_id and MP.LOBBY.players[MP.LOBBY.enemy_id].username or "No one" },
+			vars = { MP.LOBBY.enemy_id and MP.LOBBY.players[MP.LOBBY.enemy_id] and MP.LOBBY.players[MP.LOBBY.enemy_id].username or "No one" },
 		}
 	end
 end
