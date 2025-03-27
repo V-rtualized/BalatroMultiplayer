@@ -142,17 +142,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 		player_name = player_name
 	end
 
-	-- Get color
-	local color = darken(G.C.JOKER_GREY, 0.1)
-	if MP.LOBBY.is_started then
-		if player_id == MP.LOBBY.player_id then
-			color = G.C.BLUE
-		elseif player_id == MP.LOBBY.enemy_id then
-			color = darken(G.C.RED, 0.2)
-		end
-	end
-
-	-- Get location
+	-- Get shown values
 	local note = "Enemy"
 	local lives = nil
 	local highest_score = nil
@@ -172,6 +162,23 @@ function MP.UI.create_UIBox_player_row(player_id)
 		end
 	elseif MP.LOBBY.players[player_id] and MP.LOBBY.players[player_id].is_host then
 		note = note .. " (Host)"
+	end
+
+	-- Get inferred values
+	local is_highest_scorer = to_big(highest_score) > to_big(0) and to_big(highest_score) >= MP.GAME.global_highest_score
+
+	-- Get entry color
+	local color = darken(G.C.JOKER_GREY, 0.1)
+	if MP.LOBBY.is_started then
+		if player_id == MP.LOBBY.player_id then
+			color = G.C.BLUE
+		elseif player_id == MP.LOBBY.enemy_id then
+			color = darken(G.C.RED, 0.1)
+		end
+
+		if lives and lives <= 0 then
+			color = darken(color, 0.5)
+		end
 	end
 
 	return {
@@ -285,14 +292,14 @@ function MP.UI.create_UIBox_player_row(player_id)
 			},
 			{
 				n = G.UIT.C,
-				config = { align = "cm", padding = 0.05, colour = G.C.L_BLACK, r = 0.1, minw = 1.5 },
+				config = { align = "cm", padding = 0.05, colour = is_highest_scorer and G.C.GOLD or G.C.L_BLACK, r = 0.1, minw = 1.5 },
 				nodes = {
 					{
 						n = G.UIT.T,
 						config = {
 							text = number_format(MP.LOBBY.is_started and highest_score or 0, 1000000),
 							scale = 0.45,
-							colour = G.C.FILTER,
+							colour = is_highest_scorer and G.C.UI.TEXT_LIGHT or G.C.FILTER,
 							shadow = true,
 						},
 					},

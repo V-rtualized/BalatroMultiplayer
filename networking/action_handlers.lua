@@ -151,6 +151,9 @@ local function action_enemy_info(player_id, enemy_id, score_str, hands_left_str,
 	if to_big(MP.GAME.enemies[player_id].highest_score) < to_big(score) then
 		MP.GAME.enemies[player_id].highest_score = score
 	end
+	if to_big(MP.GAME.global_highest_score) < to_big(score) then
+		MP.GAME.global_highest_score = to_big(score)
+	end
 
 	G.E_MANAGER:add_event(Event({
 		blockable = false,
@@ -188,7 +191,7 @@ local function action_enemy_info(player_id, enemy_id, score_str, hands_left_str,
 	MP.GAME.enemies[player_id].hands = hands_left
 	MP.GAME.enemies[player_id].skips = skips
 	MP.GAME.enemies[player_id].lives = lives
-	if MP.is_pvp_boss() then
+	if MP.LOBBY.enemy_id and MP.LOBBY.enemy_id == player_id and MP.is_pvp_boss() then
 		G.HUD_blind:get_UIE_by_ID("HUD_blind_count"):juice_up()
 		G.HUD_blind:get_UIE_by_ID("dollars_to_be_earned"):juice_up()
 	end
@@ -208,8 +211,6 @@ end
 
 local function action_end_pvp()
 	MP.GAME.end_pvp = true
-	MP.GAME.timer = 120
-	MP.GAME.timer_started = false
 	MP.LOBBY.enemy_id = nil
 end
 
@@ -222,7 +223,7 @@ local function action_player_info(lives)
 		end
 		ease_lives(lives - MP.GAME.lives)
 	end
-	MP.GAME.lives = lives
+	MP.GAME.lives = tonumber(lives)
 end
 
 local function action_win_game()
@@ -570,6 +571,9 @@ function MP.ACTIONS.play_hand(score, hands_left)
 	if to_big(score) > to_big(MP.GAME.highest_score) then
 		MP.GAME.highest_score = score
 	end
+	if to_big(score) > to_big(MP.GAME.global_highest_score) then
+		MP.GAME.global_highest_score = to_big(score)
+	end
 	local fixed_score = tostring(to_big(score))
 	-- Credit to sidmeierscivilizationv on discord for this fix for Talisman
 	if string.match(fixed_score, "[eE]") == nil and string.match(fixed_score, "[.]") then
@@ -642,7 +646,6 @@ end
 
 function MP.ACTIONS.start_ante_timer()
 	Client.send("action:startAnteTimer,time:" .. tostring(MP.GAME.timer))
-	action_start_ante_timer(MP.GAME.timer)
 end
 
 function MP.ACTIONS.fail_timer()

@@ -64,6 +64,7 @@ function MP.reset_game_states()
 		spent_total = 0,
 		spent_before_shop = 0,
 		highest_score = 0,
+		global_highest_score = 0,
 		timer = 120,
 		timer_started = false,
 	}
