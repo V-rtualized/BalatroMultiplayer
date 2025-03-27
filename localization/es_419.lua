@@ -229,7 +229,7 @@ return {
 			k_bl_life = "VIDA",
 			k_bl_or = "o",
 			k_bl_death = "MUERTE",
-			k_current_seed = "Semilla actual: ",
+			k_current_seed = "Semilla actual",
 			k_random = "Al azar",
 			k_standard = "Estándar",
 			k_standard_description = "El conjunto de reglas estándar, incluye cartas multijugador y cambios al juego base para ajustarse al meta multijugador.",

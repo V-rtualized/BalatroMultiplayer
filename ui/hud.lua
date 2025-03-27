@@ -15,6 +15,11 @@ function MP.UI.lobby_info()
 						chosen = true,
 						tab_definition_function = MP.UI.create_UIBox_players,
 					},
+					MP.LOBBY.is_started and {
+						label = localize("b_lobby_options"),
+						chosen = false,
+						tab_definition_function = MP.UI.create_UIBox_lobby_settings,
+					} or nil
 				},
 				tab_h = 8,
 				snap_to_nav = true,
@@ -32,6 +37,17 @@ function MP.UI.show_message(message)
 		offset = { x = 0, y = -1.5 },
 		major = G.play,
 	})
+end
+
+function MP.UI.create_UIBox_empty_row(height)
+	return {
+		n = G.UIT.R,
+		config = {
+			align = "cm",
+			minh = height,
+			colour = HEX("00000000"),
+		}
+	}
 end
 
 function MP.UI.show_enemy_location()
@@ -242,22 +258,22 @@ function MP.UI.create_UIBox_player_row(player_id)
 			},
 			{
 				n = G.UIT.C,
-				config = { align = "cm", padding = 0.05, colour = G.C.BLACK, r = 0.1 },
+				config = { align = "cm", padding = 0.01, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.6), minw = 4, maxw = 4  },
 				nodes = {
 					{
-						n = G.UIT.C,
-						config = { align = "cm", padding = 0.01, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.6), minw = 4, maxw = 4  },
-						nodes = {
-							{
-								n = G.UIT.T,
-								config = {
-									text = note,
-									scale = 0.45,
-									colour = G.C.UI.TEXT_LIGHT,
-								},
-							},
+						n = G.UIT.T,
+						config = {
+							text = note,
+							scale = 0.45,
+							colour = G.C.UI.TEXT_LIGHT,
 						},
 					},
+				},
+			},
+			{
+				n = G.UIT.C,
+				config = { align = "cm", padding = 0.05, colour = G.C.BLACK, r = 0.1 },
+				nodes = {
 					{
 						n = G.UIT.C,
 						config = { align = "cr", padding = 0.01, r = 0.1, colour = G.C.CHIPS, minw = 1.1 },
@@ -329,6 +345,87 @@ function G.FUNCS.lobby_kick_player(e)
 	if player_id and MP.LOBBY.is_host then
 		MP.ACTIONS.kick_player(player_id)
 	end
+end
+
+function MP.UI.create_UIBox_lobby_settings()
+	return {
+		n = G.UIT.ROOT,
+		config = { align = "cm", minw = 4, padding = 0.5, r = 0.1, colour = G.C.CLEAR },
+		nodes = {
+			{ n = G.UIT.R, config = { align = "cm", padding = 0.04 }, nodes = {
+				{
+					n = G.UIT.R,
+					config = { align = "cm", padding = 0.1, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.2) },
+					nodes = {
+						MP.UI.create_UIBox_value_row("b_opts_player_diff_deck", MP.LOBBY.config.different_decks and "Yes" or "No"),
+						MP.UI.create_UIBox_value_row("b_opts_diff_seeds", MP.LOBBY.config.different_seeds and "Yes" or "No"),
+						MP.UI.create_UIBox_value_row("k_current_seed", MP.LOBBY.config.custom_seed == "random" and "Random" or MP.LOBBY.config.custom_seed),		
+					}
+				},
+				MP.UI.create_UIBox_empty_row(1),
+				{
+					n = G.UIT.R,
+					config = { align = "cm", padding = 0.1, r = 0.1, colour = darken(G.C.JOKER_GREY, 0.2) },
+					nodes = {
+						MP.UI.create_UIBox_value_row("b_opts_lives", MP.LOBBY.config.starting_lives),
+						MP.UI.create_UIBox_value_row("b_opts_money_modifier", MP.LOBBY.config.starting_money_modifier),
+						MP.UI.create_UIBox_value_row("b_opts_hand_modifier", MP.LOBBY.config.starting_hand_modifier),
+						MP.UI.create_UIBox_value_row("b_opts_discard_modifier", MP.LOBBY.config.starting_discard_modifier),
+					}
+				}
+			} },
+		}
+	}
+end
+
+function MP.UI.create_UIBox_value_row(name_loc_key, value)
+	local name = localize(name_loc_key)
+	if name == "ERROR" then
+		name = name_loc_key
+	end
+
+	return {
+		n = G.UIT.R,
+		config = {
+			align = "cm",
+			padding = 0.05,
+			r = 0.1,
+			colour = G.C.JOKER_GREY,
+			emboss = 0.05,
+		},
+		nodes = {
+			{
+				n = G.UIT.C,
+				config = { align = "cr", padding = 0.1, r = 0.1, colour = G.C.CHIPS, minw = 6, maxw = 6 },
+				nodes = {
+					{
+						n = G.UIT.T,
+						config = {
+							text = name,
+							scale = 0.45,
+							colour = G.C.UI.TEXT_LIGHT,
+						},
+					},
+					{ n = G.UIT.B, config = { w = 0.1, h = 0.01 } },
+				},
+			},
+			{
+				n = G.UIT.C,
+				config = { align = "cl", padding = 0.1, r = 0.1, colour = G.C.MULT, minw = 6, maxw = 6 },
+				nodes = {
+					{ n = G.UIT.B, config = { w = 0.1, h = 0.01 } },
+					{
+						n = G.UIT.T,
+						config = {
+							text = value,
+							scale = 0.45,
+							colour = G.C.UI.TEXT_LIGHT,
+						},
+					},
+				},
+			},
+		}
+	}
 end
 
 local ease_round_ref = ease_round

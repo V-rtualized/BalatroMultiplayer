@@ -224,7 +224,7 @@ return {
 			k_bl_life = "Жизнь",
 			k_bl_or = "или",
 			k_bl_death = "Смерть",
-			k_current_seed = "Сид лобби: ",
+			k_current_seed = "Сид лобби",
 			k_random = "Случайный",
 			k_standard = "Стандартный режим",
 			k_standard_description = "Стандартные правила, в которые включены уникальные карты мода и ребалансы базовой игры.",

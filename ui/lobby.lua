@@ -558,7 +558,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 																		n = G.UIT.T,
 																		config = {
 																			scale = 0.45,
-																			text = localize("k_current_seed"),
+																			text = localize("k_current_seed") .. ": ",
 																			colour = G.C.UI.TEXT_LIGHT,
 																		},
 																	},

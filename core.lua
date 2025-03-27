@@ -75,6 +75,7 @@ function MP.reset_game_states()
 		MP.GAME.enemies[player.id] = {
 			enemy_id = nil,
 			score = 0,
+			highest_score = 0,
 			score_text = "0",
 			hands = 4,
 			location = "Selecting a Blind",
@@ -82,7 +83,6 @@ function MP.reset_game_states()
 			lives = 4,
 			sells = 0,
 			spent_last_shop = 0,
-			highest_score = 0,
 		}
 	end
 end

@@ -224,7 +224,7 @@ return {
 			k_bl_life = "Ko wai ka eke?",
 			k_bl_or = "",
 			k_bl_death = "Ko wai ka hinga?",
-			k_current_seed = "Te Kākano: ",
+			k_current_seed = "Te Kākano",
 			k_random = "Tupurangi",
 			k_standard = "Takirua",
 			k_standard_description = "Ka tāpirihia ngā Kāri MULTIPLAYER, ka tini hoki ētahi o ngā Kāri o Balatro.",

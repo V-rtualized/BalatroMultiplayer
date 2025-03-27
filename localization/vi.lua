@@ -246,7 +246,7 @@ return {
 			k_bl_life = "Sống",
 			k_bl_or = "hoặc",
 			k_bl_death = "Chết",
-			k_current_seed = "Giống hiện tại: ",
+			k_current_seed = "Giống hiện tại",
 			k_random = "Ngẫu nhiên",
 			k_standard = "Tiêu Chuẩn",
 			k_standard_description = "Thể thức tiêu chuẩn, bao gồm lá Chơi Mạng và điều chỉnh game gốc để phù hợp với meta Chơi Mạng.",

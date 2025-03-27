@@ -225,7 +225,7 @@ return {
 			k_bl_life = "Leven",
 			k_bl_or = "of",
 			k_bl_death = "Dood",
-			k_current_seed = "Huidige seed: ",
+			k_current_seed = "Huidige seed",
 			k_random = "Willekeurig",
 			k_standard = "Standaard",
 			k_standard_description = "De standaard regels, inclusief Multiplayer kaarten en veranderingen aan Balatro zelf om beter te passen binnen Multiplayer.",

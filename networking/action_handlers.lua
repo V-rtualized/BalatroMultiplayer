@@ -311,14 +311,18 @@ local function enemyLocation(options)
 		value = split[2]
 	end
 
-	loc_name = localize({ type = "name_text", key = value, set = "Blind" })
-	if loc_name ~= "ERROR" then
-		value = loc_name
+	if value == "bl_mp_nemesis" and MP.LOBBY.players[options.playerId] and MP.GAME.enemies[options.playerId].enemy_id and MP.LOBBY.players[MP.GAME.enemies[options.playerId].enemy_id] then
+		value = MP.LOBBY.players[MP.GAME.enemies[options.playerId].enemy_id].username
 	else
-		value = (G.P_BLINDS[value] and G.P_BLINDS[value].name) or value
+		loc_name = localize({ type = "name_text", key = value, set = "Blind" })
+		if loc_name ~= "ERROR" then
+			value = loc_name
+		else
+			value = (G.P_BLINDS[value] and G.P_BLINDS[value].name) or value
+		end
 	end
 
-	loc_location = G.localization.misc.dictionary[location]
+	loc_location = value == "bl_mp_nemesis" and localize("loc_fighting") or G.localization.misc.dictionary[location]
 
 	if loc_location == nil then
 		if location ~= nil then

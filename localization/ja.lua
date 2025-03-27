@@ -220,7 +220,7 @@ return {
 			k_bl_life = "Life",
 			k_bl_or = "or",
 			k_bl_death = "Death",
-			k_current_seed = "シード値: ",
+			k_current_seed = "シード値",
 			k_random = "ランダム",
 			k_standard = "スタンダード",
 			k_standard_description = "マルチプレイオリジナルカードやPvPブラインドが追加された標準的なルール\n(一部マルチ用にナーフされた通常カードがあります)",

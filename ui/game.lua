@@ -135,7 +135,13 @@ function create_UIBox_blind_choice(type, run_info)
 			* G.GAME.starting_params.ante_scaling
 
 		if G.GAME.round_resets.blind_choices[type] == "bl_mp_nemesis" then
-			blind_amt = "????"
+			-- Get nemesis highscore or question marks
+			if MP.LOBBY.enemy_id and MP.GAME.enemies[MP.LOBBY.enemy_id] then
+				loc_name = MP.LOBBY.players[MP.LOBBY.enemy_id].username
+				blind_amt = MP.GAME.enemies[MP.LOBBY.enemy_id].highest_score
+			else
+				blind_amt = "???"
+			end
 		end
 
 		local text_table = loc_target
@@ -812,6 +818,7 @@ function Game:update_hand_played(dt)
 	-- Ignore for singleplayer or regular blinds
 	if not MP.LOBBY.connected or not MP.LOBBY.code or not MP.is_pvp_boss() then
 		update_hand_played_ref(self, dt)
+		MP.ACTIONS.play_hand(G.GAME.chips, G.GAME.current_round.hands_left)
 		return
 	end
 
@@ -1649,7 +1656,6 @@ function Game:update_selecting_hand(dt)
 			G.STATE_COMPLETE = false
 			G.STATE = G.STATES.NEW_ROUND
 		else
-			MP.ACTIONS.play_hand(G.GAME.chips, 0)
 			G.STATE_COMPLETE = false
 			G.STATE = G.STATES.HAND_PLAYED
 		end

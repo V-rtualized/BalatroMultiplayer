@@ -225,7 +225,7 @@ return {
 			k_bl_life = "Vie",
 			k_bl_or = "ou",
 			k_bl_death = "Mort",
-			k_current_seed = "Graine actuelle: ",
+			k_current_seed = "Graine actuelle",
 			k_random = "Aléatoire",
 			k_standard = "Standard",
 			k_standard_description = "Les règles classiques, les cartes Multijoueur sont incluses ainsi que les ajustements du jeu de base pour le multijoueur.",

@@ -225,7 +225,7 @@ return {
 			k_bl_life = "Vida",
 			k_bl_or = "o",
 			k_bl_death = "Muerte",
-			k_current_seed = "Código actual: ",
+			k_current_seed = "Código actual",
 			k_random = "Aleatorio", -- It can also be left as is, "Random" | También puede dejarse como es, "Random"
 			k_standard = "Estándar",
 			k_standard_description = "El conjunto de reglas estándar, incluye cartas multijugador y cambios al juego base para adaptarse a la estrategia del multijugador.",
