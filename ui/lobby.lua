@@ -673,7 +673,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 														enabled_ref_value = "is_host",
 														label = localize("b_opts_money_modifier"),
 														options = MP.UTILS.init_increment_array(0, 50, 5),
-														current_option = MP.LOBBY.config.starting_money_modifier + 1,
+														current_option = MP.UTILS.init_reverse_increment_array(0, 50, 5)[MP.LOBBY.config.starting_money_modifier],
 														opt_callback = "change_starting_money_modifier",
 													}),
 													Disableable_Option_Cycle({
@@ -682,7 +682,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 														enabled_ref_value = "is_host",
 														label = localize("b_opts_hand_modifier"),
 														options = MP.UTILS.init_range_array(0, 16),
-														current_option = MP.LOBBY.config.starting_hand_modifier + 1,
+														current_option = MP.UTILS.init_reverse_increment_array(0, 16, 1)[MP.LOBBY.config.starting_hand_modifier],
 														opt_callback = "change_starting_hand_modifier",
 													}),
 													Disableable_Option_Cycle({
@@ -691,7 +691,7 @@ function G.UIDEF.create_UIBox_lobby_options()
 														enabled_ref_value = "is_host",
 														label = localize("b_opts_discard_modifier"),
 														options = MP.UTILS.init_range_array(0, 16),
-														current_option = MP.LOBBY.config.starting_discard_modifier + 1,
+														current_option = MP.UTILS.init_reverse_increment_array(0, 16, 1)[MP.LOBBY.config.starting_discard_modifier],
 														opt_callback = "change_starting_discard_modifier",
 													}),
 												},

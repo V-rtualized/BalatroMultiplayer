@@ -383,3 +383,18 @@ end
 function MP.UTILS.init_range_array(min, max)
 	return MP.UTILS.init_increment_array(min, max, 1)
 end
+
+-- Reverses the key value pairs of a table
+function MP.UTILS.reverse_key_value_pairs(tbl)
+	local reversed_tbl = {}
+	for k, v in pairs(tbl) do
+		reversed_tbl[v] = k
+	end
+	return reversed_tbl
+end
+
+-- Same as init_increment_array, but reversed key-value pairs, useful for lookups
+function MP.UTILS.init_reverse_increment_array(min, max, step)
+	local range_array = MP.UTILS.init_increment_array(min, max, step)
+	return MP.UTILS.reverse_key_value_pairs(range_array)
+end
