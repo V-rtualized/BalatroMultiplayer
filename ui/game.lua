@@ -815,6 +815,18 @@ end
 local update_hand_played_ref = Game.update_hand_played
 ---@diagnostic disable-next-line: duplicate-set-field
 function Game:update_hand_played(dt)
+	-- Send the server an update
+	if MP.LOBBY.connected and MP.LOBBY.code and not G.STATE_COMPLETE then
+		-- Don't need to set G.STATE_COMPLETE here due to it being set in both possible paths of the function
+		G.E_MANAGER:add_event(Event({
+			trigger = "immediate",
+			func = function()
+				MP.ACTIONS.play_hand(G.GAME.chips, G.GAME.current_round.hands_left)
+				return true
+			end
+		}))
+	end
+
 	-- Ignore for singleplayer or regular blinds
 	if not MP.LOBBY.connected or not MP.LOBBY.code or not MP.is_pvp_boss() then
 		update_hand_played_ref(self, dt)
@@ -835,7 +847,6 @@ function Game:update_hand_played(dt)
 		G.E_MANAGER:add_event(Event({
 			trigger = "immediate",
 			func = function()
-				MP.ACTIONS.play_hand(G.GAME.chips, G.GAME.current_round.hands_left)
 				-- Set blind chips to enemy score
 				if G.GAME.blind and MP.GAME.enemies[MP.LOBBY.enemy_id] then
 					G.GAME.blind.chips = MP.GAME.enemies[MP.LOBBY.enemy_id].score
@@ -1064,7 +1075,6 @@ function create_UIBox_game_over()
 		G.CARD_H,
 		{ card_limit = G.GAME.starting_params.joker_slots, type = "joker", highlight_limit = 1 }
 	)
-	MP.ACTIONS.get_end_game_jokers()
 	G.SETTINGS.paused = false
 	local eased_red = copy_table(G.GAME.round_resets.ante <= G.GAME.win_ante and G.C.RED or G.C.BLUE)
 	eased_red[4] = 0

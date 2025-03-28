@@ -116,6 +116,17 @@ local function action_start_game(seed, stake_str)
 	end
 	G.FUNCS.exit_overlay_menu()
 	G.FUNCS.lobby_start_run(nil, { seed = seed, stake = stake })
+	
+	-- Close menu UI after 0.2 sec if it's still there
+	G.E_MANAGER:add_event(Event({
+		trigger = "after",
+		time = 0.2,
+		func = function()
+			if G.MAIN_MENU_UI then
+				G.MAIN_MENU_UI:remove()
+			end
+		end
+	}))
 end
 
 local function action_start_blind()
@@ -134,7 +145,7 @@ end
 ---@param hands_left_str string
 ---@param skips_str string
 local function action_enemy_info(player_id, enemy_id, score_str, hands_left_str, skips_str, lives_str)
-	local score = tonumber(score_str)
+	local score = Big and Big.parse and Big.parse(score_str) or tonumber(score_str)
 	local hands_left = tonumber(hands_left_str)
 	local skips = tonumber(skips_str)
 	local lives = tonumber(lives_str)
@@ -474,15 +485,23 @@ local function action_receive_end_game_jokers(keys)
 	if not MP.end_game_jokers or not keys or keys == "0" then
 		return
 	end
+
 	local split_keys = {}
 	for key in string.gmatch(keys, "([^;]+)") do
 		table.insert(split_keys, key)
 	end
-	for _, key in pairs(split_keys) do
-		local card = create_card("Joker", MP.end_game_jokers, false, nil, nil, nil, key)
-		card:set_edition()
-		card:add_to_deck()
-		MP.end_game_jokers:emplace(card)
+	for i, key in pairs(split_keys) do
+		G.E_MANAGER:add_event(Event({
+			trigger = "after",
+			delay = 0.2 * i,
+			func = function()
+				local card = create_card("Joker", MP.end_game_jokers, false, nil, nil, nil, key)
+				card:set_edition()
+				card:add_to_deck()
+				MP.end_game_jokers:emplace(card)
+				return true
+			end,
+		}))
 	end
 end
 
