@@ -145,7 +145,7 @@ end
 ---@param hands_left_str string
 ---@param skips_str string
 local function action_enemy_info(player_id, enemy_id, score_str, hands_left_str, skips_str, lives_str)
-	local score = Big and Big.parse and Big.parse(score_str) or tonumber(score_str)
+	local score = tonumber(score_str)
 	local hands_left = tonumber(hands_left_str)
 	local skips = tonumber(skips_str)
 	local lives = tonumber(lives_str)
