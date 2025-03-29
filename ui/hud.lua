@@ -168,10 +168,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 	end
 
 	if MP.LOBBY.is_started then
-		if player_id == MP.LOBBY.player_id then
-			lives = MP.GAME.lives
-			highest_score = MP.GAME.highest_score
-		elseif MP.GAME.enemies and MP.GAME.enemies[player_id] then
+		if MP.GAME.enemies and MP.GAME.enemies[player_id] then
 			lives = MP.GAME.enemies[player_id].lives
 			highest_score = MP.GAME.enemies[player_id].highest_score
 			note = lives > 0 and MP.GAME.enemies[player_id].location or "Dead"
@@ -181,7 +178,7 @@ function MP.UI.create_UIBox_player_row(player_id)
 	end
 
 	-- Get inferred values
-	local is_highest_scorer = MP.GAME.global_highest_score and highest_score and to_big(highest_score) > to_big(0) and to_big(highest_score) >= MP.GAME.global_highest_score
+	local is_highest_scorer = MP.GAME.global_highest_score and highest_score and MP.INSANE_INT.empty() ~= highest_score and (highest_score == MP.GAME.global_highest_score or MP.INSANE_INT.greater_than(highest_score, MP.GAME.global_highest_score))
 
 	-- Get entry color
 	local color = darken(G.C.JOKER_GREY, 0.1)
@@ -310,12 +307,12 @@ function MP.UI.create_UIBox_player_row(player_id)
 			},
 			{
 				n = G.UIT.C,
-				config = { align = "cm", padding = 0.05, colour = is_highest_scorer and G.C.GOLD or G.C.L_BLACK, r = 0.1, minw = 1.5 },
+				config = { align = "cm", padding = 0.05, colour = is_highest_scorer and G.C.GOLD or G.C.L_BLACK, r = 0.1, minw = 1.8, maxw = 1.8 },
 				nodes = {
 					{
 						n = G.UIT.T,
 						config = {
-							text = number_format(MP.LOBBY.is_started and highest_score or 0, 1000000),
+							text = MP.LOBBY.is_started and MP.INSANE_INT.to_string(highest_score) or "0",
 							scale = 0.45,
 							colour = is_highest_scorer and G.C.UI.TEXT_LIGHT or G.C.FILTER,
 							shadow = true,

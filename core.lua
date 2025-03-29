@@ -42,53 +42,6 @@ MP.ACTIONS = {}
 
 G.C.MULITPLAYER = HEX("AC3232")
 
-function MP.reset_game_states()
-	sendDebugMessage("Resetting game states", "MULTIPLAYER")
-	MP.GAME = {
-		ready_blind = false,
-		ready_blind_text = localize("b_ready"),
-		processed_round_done = false,
-		lives = 0,
-		loaded_ante = 0,
-		loading_blinds = false,
-		comeback_bonus_given = true,
-		comeback_bonus = 0,
-		end_pvp = false,
-		enemies = {}, 
-		location = "loc_selecting",
-		next_blind_context = nil,
-		ante_key = tostring(math.random()),
-		antes_keyed = {},
-		prevent_eval = false,
-		misprint_display = "",
-		spent_total = 0,
-		spent_before_shop = 0,
-		highest_score = 0,
-		global_highest_score = 0,
-		timer = 120,
-		timer_started = false,
-	}
-
-	MP.GAME.enemies = {}
-
-	for k, player in pairs(MP.LOBBY.players) do
-		MP.GAME.enemies[player.id] = {
-			enemy_id = nil,
-			score = 0,
-			highest_score = 0,
-			score_text = "0",
-			hands = 4,
-			location = "Selecting a Blind",
-			skips = 0,
-			lives = 4,
-			sells = 0,
-			spent_last_shop = 0,
-		}
-	end
-end
-
-MP.reset_game_states()
-
 function MP.load_mp_file(file)
 	local chunk, err = SMODS.load_file(file, "NanoMultiplayer")
 	if chunk then
@@ -125,6 +78,53 @@ function MP.load_mp_dir(directory)
 end
 
 MP.load_mp_file("misc/utils.lua")
+MP.load_mp_file("misc/insane_int.lua")
+
+function MP.reset_game_states()
+	sendDebugMessage("Resetting game states", "MULTIPLAYER")
+	MP.GAME = {
+		ready_blind = false,
+		ready_blind_text = localize("b_ready"),
+		processed_round_done = false,
+		lives = 0,
+		loaded_ante = 0,
+		loading_blinds = false,
+		comeback_bonus_given = true,
+		comeback_bonus = 0,
+		end_pvp = false,
+		enemies = {}, 
+		location = "loc_selecting",
+		next_blind_context = nil,
+		ante_key = tostring(math.random()),
+		antes_keyed = {},
+		prevent_eval = false,
+		misprint_display = "",
+		spent_total = 0,
+		spent_before_shop = 0,
+		global_highest_score = MP.INSANE_INT.empty(),
+		timer = 120,
+		timer_started = false,
+	}
+
+	MP.GAME.enemies = {}
+
+	for k, player in pairs(MP.LOBBY.players) do
+		MP.GAME.enemies[player.id] = {
+			enemy_id = nil,
+			score = MP.INSANE_INT.empty(),
+			highest_score = MP.INSANE_INT.empty(),
+			score_text = "0",
+			hands = 4,
+			location = "Selecting a Blind",
+			skips = 0,
+			lives = 4,
+			sells = 0,
+			spent_last_shop = 0,
+		}
+	end
+end
+
+MP.reset_game_states()
 
 MP.LOBBY.username = MP.UTILS.get_username()
 

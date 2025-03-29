@@ -138,7 +138,7 @@ function create_UIBox_blind_choice(type, run_info)
 			-- Get nemesis highscore or question marks
 			if MP.LOBBY.enemy_id and MP.GAME.enemies[MP.LOBBY.enemy_id] then
 				loc_name = MP.LOBBY.players[MP.LOBBY.enemy_id].username
-				blind_amt = MP.GAME.enemies[MP.LOBBY.enemy_id].highest_score
+				blind_amt = MP.INSANE_INT.to_string(MP.GAME.enemies[MP.LOBBY.enemy_id].highest_score)
 			else
 				blind_amt = "???"
 			end
@@ -849,7 +849,7 @@ function Game:update_hand_played(dt)
 			func = function()
 				-- Set blind chips to enemy score
 				if G.GAME.blind and MP.GAME.enemies[MP.LOBBY.enemy_id] then
-					G.GAME.blind.chips = MP.GAME.enemies[MP.LOBBY.enemy_id].score
+					G.GAME.blind.chip_text = MP.INSANE_INT.to_string(MP.GAME.enemies[MP.LOBBY.enemy_id].score)
 				end
 				-- For now, never advance to next round
 				if G.GAME.current_round.hands_left < 1 then
@@ -1703,9 +1703,13 @@ G.FUNCS.multiplayer_blind_chip_UI_scale = function(e)
 		return
 	end
 
-	local new_score_text = number_format(MP.GAME.enemies[MP.LOBBY.enemy_id].score)
-	if G.GAME.blind and MP.GAME.enemies[MP.LOBBY.enemy_id].score and MP.GAME.enemies[MP.LOBBY.enemy_id].score_text ~= new_score_text then
-		e.config.scale = scale_number(MP.GAME.enemies[MP.LOBBY.enemy_id].score, 0.7, 100000)
+	if not MP.GAME.enemies[MP.LOBBY.enemy_id].score then
+		return
+	end
+	
+	local new_score_text = MP.INSANE_INT.to_string(MP.GAME.enemies[MP.LOBBY.enemy_id].score)
+	if G.GAME.blind and MP.GAME.enemies[MP.LOBBY.enemy_id].score_text ~= new_score_text then
+		-- e.config.scale = scale_number(MP.GAME.enemies[MP.LOBBY.enemy_id].score, 0.7, 100000)
 		MP.GAME.enemies[MP.LOBBY.enemy_id].score_text = new_score_text
 	end
 end
