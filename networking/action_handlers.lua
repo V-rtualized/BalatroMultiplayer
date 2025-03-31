@@ -521,7 +521,7 @@ local function action_receive_end_game_jokers(keys)
 	for i, key in pairs(split_keys) do
 		G.E_MANAGER:add_event(Event({
 			trigger = "after",
-			delay = 0.2 * i,
+			delay = 0.15 + (0.05 * i),
 			func = function()
 				local card = create_card("Joker", MP.end_game_jokers, false, nil, nil, nil, key)
 				card:set_edition()
