@@ -393,7 +393,7 @@ local function action_magnet()
 				table.insert(candidates, v)
 			end
 		end
-		-- Scale the provided pseudorandom number to an index
+		-- Scale the pseudo from 0 - 1 to the number of candidates
 		local randomIndex = math.floor(pseudorandom('j_mp_magnet') * #candidates) + 1
 		MP.ACTIONS.magnet_response(candidates[randomIndex].config.center.key)
 	end
