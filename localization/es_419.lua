@@ -233,7 +233,7 @@ return {
 			k_random = "Al azar",
 			k_standard = "Estándar",
 			k_standard_description = "Reglas del modo estándar, agrega cartas del multijugador y algunos cambios del juego base para adaptarse al meta del mod.",
-			k_vanilla = "Vanilla",
+			k_vanilla = "Vainilla",
 			k_vanilla_description = "Reglas del modo vainilla, sin cartas del multijugador y no modifica nada del juego base.",
 			k_weekly = "Semanal",
 			k_weekly_description = "Reglas especiales que cambian semanal o quincenalmente. ¡Supongo que tendrás que descubrirlo por tu cuenta! Actualmente: ",
